@@ -1,8 +1,29 @@
-@import "tailwindcss";
+@font-face {
+  font-family: 'LXGW WenKai';
+  src: url('/fonts/LXGWWenKai-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  font-family: 'LXGW WenKai', 'Times New Roman', Times, serif;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #181f2a;
+  --foreground: #ededed;
+  --primary: #ef4444;
+  --primary-hover: #dc2626;
+  --secondary: #64748b;
+  --muted: #232b3b;
+  --muted-foreground: #64748b;
+  --border: #2d3748;
+  --radius: 0.5rem;
 }
 
 @theme inline {
@@ -14,13 +35,26 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #181f2a;
     --foreground: #ededed;
+    --primary: #ef4444;
+    --primary-hover: #dc2626;
+    --secondary: #94a3b8;
+    --muted: #232b3b;
+    --muted-foreground: #94a3b8;
+    --border: #2d3748;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  body {
+    @apply bg-[#181f2a] text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
 }
