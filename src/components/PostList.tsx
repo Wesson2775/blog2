@@ -30,7 +30,7 @@ export default function PostList({ posts }: PostListProps) {
                 {format(post.createdAt, 'PPP', { locale: zhCN })}
               </time>
             </div>
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-neutral-200 mb-2">
               {post.title}
             </h2>
             {post.excerpt && (

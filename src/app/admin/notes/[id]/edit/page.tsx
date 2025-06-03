@@ -35,25 +35,25 @@ export default function EditNote({ params }: { params: { id: string } }) {
 
   return (
     <div className="max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6 text-white">编辑笔记</h1>
+      <h1 className="text-2xl font-bold mb-6 text-neutral-200">编辑笔记</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <textarea
-          className="w-full p-2 rounded bg-[#181f2a] text-white border border-[#2a3441] min-h-[120px]"
+          className="w-full p-2 rounded bg-[#181f2a] text-neutral-200 border border-[#2a3441] min-h-[120px]"
           placeholder="内容 (支持 Markdown)"
           value={content}
           onChange={e => setContent(e.target.value)}
           required
         />
         <div className="flex gap-4 items-center">
-          <label className="text-white flex items-center gap-1">
+          <label className="text-neutral-200 flex items-center gap-1">
             <input type="checkbox" checked={pinned} onChange={e => setPinned(e.target.checked)} /> 置顶
           </label>
-          <label className="text-white flex items-center gap-1">
+          <label className="text-neutral-200 flex items-center gap-1">
             <input type="checkbox" checked={published} onChange={e => setPublished(e.target.checked)} /> 发布
           </label>
         </div>
         {error && <div className="text-red-400">{error}</div>}
-        <button type="submit" className="bg-red-500 hover:bg-red-600 text-white rounded px-4 py-2 font-bold">保存</button>
+        <button type="submit" className="bg-red-400 hover:bg-red-400 text-neutral-200 rounded px-4 py-2 font-bold">保存</button>
       </form>
     </div>
   )

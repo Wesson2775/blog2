@@ -23,17 +23,17 @@ export default function Layout({
         <main className="flex-1">
           {children}
         </main>
-        <div className="hidden lg:block w-[180px]">
+        <div className="hidden md:block w-[180px]">
           <Sidebar />
         </div>
       </div>
       <footer className="border-t border-border bg-[#181f2a]">
         <div className="w-[832px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="text-center text-gray-400 text-sm">
+          <div className="text-center text-gray-400 text-xs">
             <p>© 2024 只抄. All rights reserved.</p>
             <div className="mt-2 space-x-4">
-              <a href="/analytics" className="hover:text-white">Analytics</a>
-              <a href="/rss" className="hover:text-white">RSS</a>
+              <a href="/analytics" className="hover:text-neutral-200">Analytics</a>
+              <a href="/rss" className="hover:text-neutral-200">RSS</a>
             </div>
           </div>
         </div>

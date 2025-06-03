@@ -27,7 +27,7 @@ export default async function Home({ searchParams }: { searchParams: { page?: st
       <div className="space-y-4">
         {(posts as unknown as Post[]).map((post: Post) => (
           <article key={post.id} className="group">
-            <div className="mb-1 text-sm text-neutral-400 flex gap-5">
+            <div className="mb-1 text-xs text-neutral-400 flex gap-5">
               <time dateTime={post.createdAt.toISOString()}>
                 {format(post.createdAt, 'yyyy/MM/dd', { locale: zhCN })}
               </time>
@@ -48,7 +48,7 @@ export default async function Home({ searchParams }: { searchParams: { page?: st
               )}
             </div>
             <Link href={`/blog/${post.slug}`}>
-              <h2 className="text-m mb-1 hover:text-red-400 transition-colors">{post.title}</h2>
+              <h2 className="text-base mb-1 hover:text-red-400 transition-colors">{post.title}</h2>
             </Link>
             <p className="text-neutral-400 text-sm line-clamp-2">{post.content}</p>
           </article>
@@ -64,7 +64,7 @@ export default async function Home({ searchParams }: { searchParams: { page?: st
                 href={`/?page=${i + 1}`}
                 className={`flex items-center justify-center min-w-[24px] h-6 px-1 rounded border transition-colors ${
                   page === i + 1 
-                    ? 'bg-red-500 text-white border-transparent' 
+                    ? 'bg-red-500 text-neutral-200 border-transparent' 
                     : 'border-transparent text-neutral-400 hover:text-red-500 hover:border-red-500'
                 }`}
               >

@@ -1,6 +1,6 @@
 "use client"
 export default function BackButton() {
   return (
-    <button onClick={() => window.history.back()} className="mb-6 mt-4 py-1.5 rounded bg-[#232b3b] text-red-400 hover:bg-[#232b3b]/80 font-medium text-sm transition-colors">← 返回</button>
+    <button onClick={() => window.history.back()} className="inline-flex items-center text-sm text-neutral-400 hover:text-red-400 transition-colors mt-4">← 返回</button>
   )
 } 

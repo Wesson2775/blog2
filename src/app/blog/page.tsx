@@ -41,7 +41,7 @@ export default async function BlogPage({ searchParams }: { searchParams: { page?
               <Link
                 key={i}
                 href={`/blog?page=${i + 1}`}
-                className={`w-8 h-8 rounded border ${page === i + 1 ? 'border-red-500 bg-red-500 text-white font-bold' : 'border-transparent text-red-500 hover:border-red-500 hover:text-red-500'} flex items-center justify-center transition-colors`}
+                className={`w-8 h-8 rounded border ${page === i + 1 ? 'border-red-400 bg-red-400 text-neutral-200 font-bold' : 'border-transparent text-red-400 hover:border-red-400 hover:text-red-400'} flex items-center justify-center transition-colors`}
               >
                 {i + 1}
               </Link>

@@ -33,7 +33,7 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
 
   return (
     <div className="mx-auto max-w-3xl px-4">
-      <h1 className="text-2xl mb-8">搜索：{q}</h1>
+      <h1 className="text-base mb-8">搜索：{q}</h1>
       <div className="space-y-12">
         {posts.length === 0 && <div className="text-neutral-400">没有找到相关文章。</div>}
         {posts.map((post) => (
@@ -55,7 +55,7 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
               {post.pinned && <span>[置顶]</span>}
             </div>
             <Link href={`/blog/${post.slug}`}>
-              <h2 className="text-m mb-2 hover:text-red-400 transition-colors">{post.title}</h2>
+              <h2 className="text-base mb-2 hover:text-red-400 transition-colors">{post.title}</h2>
             </Link>
             <p className="text-neutral-400 text-sm line-clamp-2">{post.content}</p>
           </article>
@@ -71,8 +71,8 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
                 href={`/search?q=${encodeURIComponent(q)}&page=${i + 1}`}
                 className={`flex items-center justify-center min-w-[24px] h-6 px-1 rounded border transition-colors ${
                   page === i + 1 
-                    ? 'bg-red-500 text-white border-transparent' 
-                    : 'border-transparent text-neutral-400 hover:text-red-500 hover:border-red-500'
+                    ? 'bg-red-400 text-neutral-200 border-transparent' 
+                    : 'border-transparent text-neutral-400 hover:text-red-400 hover:border-red-400'
                 }`}
               >
                 {i + 1}
@@ -83,7 +83,7 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
                 <span className="text-neutral-400">...</span>
                 <Link
                   href={`/search?q=${encodeURIComponent(q)}&page=${totalPages}`}
-                  className="flex items-center justify-center min-w-[24px] h-6 px-1 border border-transparent text-neutral-400 hover:text-red-500 hover:border-red-500 rounded"
+                  className="flex items-center justify-center min-w-[24px] h-6 px-1 border border-transparent text-neutral-400 hover:text-red-400 hover:border-red-400 rounded"
                 >
                   {totalPages}
                 </Link>
@@ -93,7 +93,7 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
           {page < totalPages && (
             <Link
               href={`/search?q=${encodeURIComponent(q)}&page=${page + 1}`}
-              className="flex items-center text-sm border rounded px-2 h-6 text-neutral-400 border-neutral-600 hover:text-red-500 hover:border-red-500 transition-colors"
+              className="flex items-center text-sm border rounded px-2 h-6 text-neutral-400 border-neutral-600 hover:text-red-400 hover:border-red-400 transition-colors"
             >
               下一个 <span className="ml-1">›</span>
             </Link>

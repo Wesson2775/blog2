@@ -44,9 +44,9 @@
 
 @layer base {
   body {
-    @apply bg-[#181f2a] text-foreground antialiased;
+    @apply font-sans bg-[#181f2a] text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
-    font-family: 'LXGW WenKai', system-ui, -apple-system, sans-serif;
+    font-family: 'LXGW WenKai', 'Inter', system-ui, -apple-system, sans-serif !important;
   }
 }
 

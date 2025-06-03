@@ -45,7 +45,7 @@ export default async function TagPostsPage({ params, searchParams }: { params: {
                 <div className="flex gap-1">
                   {post.tags.map((tag, index) => (
                     <Link href={`/tags/${encodeURIComponent(tag.name)}`} key={tag.id}>
-                      <span className="text-red-400 hover:text-red-500">
+                      <span className="text-red-400 hover:text-red-400">
                         {tag.name}
                         {index < post.tags.length - 1 && ' '}
                       </span>
@@ -56,7 +56,7 @@ export default async function TagPostsPage({ params, searchParams }: { params: {
               {post.pinned && <span>[置顶]</span>}
             </div>
             <Link href={`/blog/${post.slug}`}>
-              <h2 className="text-m mb-2 hover:text-red-400 transition-colors">{post.title}</h2>
+              <h2 className="text-base mb-2 hover:text-red-400 transition-colors">{post.title}</h2>
             </Link>
             <p className="text-neutral-400 text-sm line-clamp-2">{post.content}</p>
           </article>
@@ -72,8 +72,8 @@ export default async function TagPostsPage({ params, searchParams }: { params: {
                 href={`/tags/${encodeURIComponent(tag)}?page=${i + 1}`}
                 className={`flex items-center justify-center min-w-[24px] h-6 px-1 rounded border transition-colors ${
                   page === i + 1 
-                    ? 'bg-red-500 text-white border-transparent' 
-                    : 'border-transparent text-neutral-400 hover:text-red-500 hover:border-red-500'
+                    ? 'bg-red-400 text-neutral-200 border-transparent' 
+                    : 'border-transparent text-neutral-400 hover:text-red-400 hover:border-red-400'
                 }`}
               >
                 {i + 1}
@@ -84,7 +84,7 @@ export default async function TagPostsPage({ params, searchParams }: { params: {
                 <span className="text-neutral-400">...</span>
                 <Link
                   href={`/tags/${encodeURIComponent(tag)}?page=${totalPages}`}
-                  className="flex items-center justify-center min-w-[24px] h-6 px-1 border border-transparent text-neutral-400 hover:text-red-500 hover:border-red-500 rounded"
+                  className="flex items-center justify-center min-w-[24px] h-6 px-1 border border-transparent text-neutral-400 hover:text-red-400 hover:border-red-400 rounded"
                 >
                   {totalPages}
                 </Link>
@@ -94,7 +94,7 @@ export default async function TagPostsPage({ params, searchParams }: { params: {
           {page < totalPages && (
             <Link
               href={`/tags/${encodeURIComponent(tag)}?page=${page + 1}`}
-              className="flex items-center text-sm border rounded px-2 h-6 text-neutral-400 border-neutral-600 hover:text-red-500 hover:border-red-500 transition-colors"
+              className="flex items-center text-sm border rounded px-2 h-6 text-neutral-400 border-neutral-600 hover:text-red-400 hover:border-red-400 transition-colors"
             >
               下一个 <span className="ml-1">›</span>
             </Link>

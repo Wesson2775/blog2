@@ -17,7 +17,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="min-h-screen flex bg-[#181f2a]">
       {/* 侧边栏菜单 */}
-      <aside className="w-56 bg-[#232b3b] text-white flex flex-col py-8 px-4">
+      <aside className="w-56 bg-[#232b3b] text-neutral-200 flex flex-col py-8 px-4">
         <h2 className="text-xl font-bold mb-8">后台管理</h2>
         <nav className="flex flex-col gap-4">
           <Link href="/admin/dashboard" className="hover:text-red-400">仪表盘</Link>

@@ -63,7 +63,7 @@ export default function Navbar() {
                 height={32}
                 className="rounded-full"
               />
-              <Link href="/" className="text-xl font-bold text-white ml-1">只抄</Link>
+              <Link href="/" className="text-xl font-bold text-neutral-200 ml-1">只抄</Link>
               {/* 搜索框，严格还原截图样式 */}
               <form
                 action="/search"
@@ -77,7 +77,7 @@ export default function Navbar() {
                   type="text"
                   name="q"
                   placeholder="搜索文档"
-                  className="flex-1 bg-transparent border-0 outline-none text-white text-xs placeholder:text-gray-400 px-0 h-8"
+                  className="flex-1 bg-transparent border-0 outline-none text-neutral-200 text-xs placeholder:text-gray-400 px-0 h-8"
                   style={{ minWidth: 0 }}
                   readOnly
                 />
@@ -95,7 +95,7 @@ export default function Navbar() {
                     className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
                       pathname === item.path
                         ? 'text-red-400 font-semibold'
-                        : 'text-neutral-200 hover:text-white'
+                        : 'text-neutral-200 hover:text-neutral-200'
                     }`}
                   >
                     {item.name}
@@ -133,7 +133,7 @@ export default function Navbar() {
                   aria-label="更多"
                   type="button"
                 >
-                  <MoreHorizontal className="w-6 h-6 text-white" />
+                  <MoreHorizontal className="w-6 h-6 text-neutral-200" />
                 </button>
                 {menuOpen && (
                   <div className="absolute right-0 top-8 w-24 rounded-[8px] bg-[#232b3b] shadow-lg border border-border flex flex-row items-center justify-center py-1 z-50 gap-2"
@@ -161,23 +161,23 @@ export default function Navbar() {
               {/* 768px以下，显示搜索图标和三横杠，二者并排，修复三横杠弹窗为全屏遮罩+顶部菜单 */}
               <div className="flex md:hidden items-center ml-2">
                 <button className="p-2" title="搜索" onClick={() => setSearchOpen(true)}>
-                  <Search className="w-5 h-5 text-white" />
+                  <Search className="w-5 h-5 text-neutral-200" />
                 </button>
                 <button className="p-2" title="菜单" onClick={() => setMobileMenuOpen(true)}>
-                  <Menu className="w-6 h-6 text-white" />
+                  <Menu className="w-6 h-6 text-neutral-200" />
                 </button>
                 {/* 移动端菜单弹窗：全屏遮罩，顶部为菜单和图标 */}
                 {mobileMenuOpen && (
                   <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur flex flex-col h-screen" onClick={() => setMobileMenuOpen(false)}>
                     {/* 顶部菜单栏 */}
                     <div className="w-full bg-[#232b3b] pt-6 pb-8 px-6 rounded-b-[16px] flex flex-col items-center shadow-lg relative" onClick={e => e.stopPropagation()}>
-                      <button className="absolute top-4 right-4 text-2xl text-white" onClick={() => setMobileMenuOpen(false)} aria-label="关闭">×</button>
+                      <button className="absolute top-4 right-4 text-2xl text-neutral-200" onClick={() => setMobileMenuOpen(false)} aria-label="关闭">×</button>
                       <div className="flex flex-col items-center gap-6 mt-2">
                         {menu.map((item) => (
                           <Link
                             key={item.path}
                             href={item.path}
-                            className="text-lg text-white font-medium hover:text-red-400 transition-colors"
+                            className="text-lg text-neutral-200 font-medium hover:text-red-400 transition-colors"
                             onClick={() => setMobileMenuOpen(false)}
                           >
                             {item.name}
@@ -191,14 +191,14 @@ export default function Navbar() {
                             className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-border transition-colors"
                             aria-label="GitHub"
                           >
-                            <Github className="w-6 h-6 text-white" />
+                            <Github className="w-6 h-6 text-neutral-200" />
                           </a>
                           <a
                             href="mailto:your.email@example.com"
                             className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-border transition-colors"
                             aria-label="Email"
                           >
-                            <Mail className="w-6 h-6 text-white" />
+                            <Mail className="w-6 h-6 text-neutral-200" />
                           </a>
                         </div>
                       </div>

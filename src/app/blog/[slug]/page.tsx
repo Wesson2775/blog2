@@ -62,7 +62,7 @@ export default async function PostPage({ params }: PostPageProps) {
           className="inline-flex items-center text-sm text-neutral-400 hover:text-red-400 transition-colors"
         >
           <ArrowLeft className="w-4 h-4 mr-1" />
-          返回首页
+          返回
         </Link>
       </div>
     </div>
