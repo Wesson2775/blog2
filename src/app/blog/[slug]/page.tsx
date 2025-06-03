@@ -4,6 +4,8 @@ import { format } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
 import { Tag } from '@/types/post'
 import MDXContent from '@/components/MDXContent'
+import Link from 'next/link'
+import { ArrowLeft } from 'lucide-react'
 
 interface PostPageProps {
   params: {
@@ -28,7 +30,7 @@ export default async function PostPage({ params }: PostPageProps) {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12">
+    <div className="mx-auto max-w-3xl px-4">
       <article>
         <header className="text-center mb-12">
           <h1 className="text-3xl font-normal mb-4">{post.title}</h1>
@@ -38,7 +40,7 @@ export default async function PostPage({ params }: PostPageProps) {
             </time>
             {post.tags.length > 0 && (
               <>
-                <span> . </span>
+                <span>/</span>
                 {post.tags.map((tag: Tag, index: number) => (
                   <span key={tag.id}>
                     {tag.name}
@@ -54,6 +56,15 @@ export default async function PostPage({ params }: PostPageProps) {
           <MDXContent content={post.content} />
         </div>
       </article>
+      <div className="mt-12">
+        <Link 
+          href="/" 
+          className="inline-flex items-center text-sm text-neutral-400 hover:text-red-400 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4 mr-1" />
+          返回首页
+        </Link>
+      </div>
     </div>
   )
 } 

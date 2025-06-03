@@ -34,10 +34,12 @@ export default async function Home({ searchParams }: { searchParams: { page?: st
               {post.tags.length > 0 && (
                 <div className="flex gap-1">
                   {post.tags.map((tag: Tag, index: number) => (
-                    <span key={tag.id} className="text-red-400">
-                      {tag.name}
-                      {index < post.tags.length - 1 && ' '}
-                    </span>
+                    <Link href={`/tags/${encodeURIComponent(tag.name)}`} key={tag.id}>
+                      <span className="text-red-400 hover:text-red-500">
+                        {tag.name}
+                        {index < post.tags.length - 1 && ' '}
+                      </span>
+                    </Link>
                   ))}
                 </div>
               )}

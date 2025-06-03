@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { Search, Github, Mail, Menu, MoreHorizontal } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
 import SearchModal from './SearchModal'
+import Image from 'next/image'
 
 const menu = [
   { name: '首页', path: '/' },
@@ -55,7 +56,13 @@ export default function Navbar() {
           <div className="flex h-16 items-center justify-between">
             {/* 左侧 Logo+博客名+搜索框（1280px以上和768-1280px都显示） */}
             <div className="flex items-center">
-              <span className="text-2xl">🐧</span>
+              <Image
+                src="/avatar.png"
+                alt="Avatar"
+                width={32}
+                height={32}
+                className="rounded-full"
+              />
               <Link href="/" className="text-xl font-bold text-white ml-1">只抄</Link>
               {/* 搜索框，严格还原截图样式 */}
               <form
