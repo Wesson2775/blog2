@@ -36,7 +36,7 @@ export default function Sidebar() {
       <div className="flex flex-col mb-8">
         <div className="mb-4">
           <Image
-            src="/avatar.png"
+            src="/512x512.png"
             alt="Avatar"
             width={64}
             height={64}

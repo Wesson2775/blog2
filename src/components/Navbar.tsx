@@ -57,7 +57,7 @@ export default function Navbar() {
             {/* 左侧 Logo+博客名+搜索框（1280px以上和768-1280px都显示） */}
             <div className="flex items-center">
               <Image
-                src="/avatar.png"
+                src="/512x512.png"
                 alt="Avatar"
                 width={32}
                 height={32}
