@@ -1,7 +1,7 @@
-import { MDXRemote } from 'next-mdx-remote'
 import { serialize } from 'next-mdx-remote/serialize'
 import remarkGfm from 'remark-gfm'
 import rehypePrism from 'rehype-prism-plus'
+import MDXRenderer from './MDXRenderer'
 
 interface MDXContentProps {
   content: string
@@ -15,9 +15,5 @@ export default async function MDXContent({ content }: MDXContentProps) {
     },
   })
 
-  return (
-    <div className="prose dark:prose-invert max-w-none">
-      <MDXRemote {...mdxSource} />
-    </div>
-  )
+  return <MDXRenderer source={mdxSource} />
 } 

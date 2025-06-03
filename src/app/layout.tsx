@@ -17,7 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="zh-CN" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={`${inter.className} bg-[#181f2a] text-gray-100`}>
         <ClientLayout>{children}</ClientLayout>
       </body>
     </html>

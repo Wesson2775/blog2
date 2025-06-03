@@ -1,16 +1,14 @@
-import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
+import Link from 'next/link'
 import { format } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
-import { Post, Tag } from '@/types/post'
 
-export default async function Home({ searchParams }: { searchParams: { page?: string } }) {
+export default async function NotesPage({ searchParams }: { searchParams: { page?: string } }) {
   const page = parseInt(searchParams.page || '1', 10)
-  const pageSize = 5
-  const [posts, total] = await Promise.all([
-    prisma.post.findMany({
+  const pageSize = 10
+  const [notes, total] = await Promise.all([
+    prisma.note.findMany({
       where: { published: true },
-      include: { tags: true },
       orderBy: [
         { pinned: 'desc' },
         { createdAt: 'desc' },
@@ -18,37 +16,25 @@ export default async function Home({ searchParams }: { searchParams: { page?: st
       skip: (page - 1) * pageSize,
       take: pageSize,
     }),
-    prisma.post.count({ where: { published: true } }),
+    prisma.note.count({ where: { published: true } }),
   ])
   const totalPages = Math.ceil(total / pageSize)
 
   return (
     <div className="mx-auto max-w-3xl px-4">
-      <div className="space-y-4">
-        {(posts as unknown as Post[]).map((post: Post) => (
-          <article key={post.id} className="group">
-            <div className="mb-1 text-sm text-neutral-400 flex gap-5">
-              <time dateTime={post.createdAt.toISOString()}>
-                {format(post.createdAt, 'yyyy/MM/dd', { locale: zhCN })}
+      <div className="space-y-8">
+        {notes.length === 0 && <div className="text-neutral-400">没有找到笔记。</div>}
+        {notes.map((note) => (
+          <article key={note.id} className="group">
+            <div className="mb-2 text-sm text-red-400">
+              <time dateTime={note.createdAt.toISOString()}>
+                {format(note.createdAt, 'yyyy/MM/dd', { locale: zhCN })}
               </time>
-              {post.tags.length > 0 && (
-                <div className="flex gap-1">
-                  {post.tags.map((tag: Tag, index: number) => (
-                    <span key={tag.id} className="text-red-400">
-                      {tag.name}
-                      {index < post.tags.length - 1 && ' '}
-                    </span>
-                  ))}
-                </div>
-              )}
-              {post.pinned && (
-                <span>[置顶]</span>
+              {note.pinned && (
+                <span className="ml-5">[置顶]</span>
               )}
             </div>
-            <Link href={`/blog/${post.slug}`}>
-              <h2 className="text-m mb-1 hover:text-red-400 transition-colors">{post.title}</h2>
-            </Link>
-            <p className="text-neutral-400 text-sm line-clamp-2">{post.content}</p>
+            <div className="text-m text-neutral-200">{note.content}</div>
           </article>
         ))}
       </div>
@@ -59,7 +45,7 @@ export default async function Home({ searchParams }: { searchParams: { page?: st
             {Array.from({ length: Math.min(4, totalPages) }).map((_, i) => (
               <Link
                 key={i}
-                href={`/?page=${i + 1}`}
+                href={`/notes?page=${i + 1}`}
                 className={`flex items-center justify-center min-w-[24px] h-6 px-1 rounded border transition-colors ${
                   page === i + 1 
                     ? 'bg-red-500 text-white border-transparent' 
@@ -73,7 +59,7 @@ export default async function Home({ searchParams }: { searchParams: { page?: st
               <>
                 <span className="text-neutral-400">...</span>
                 <Link
-                  href={`/?page=${totalPages}`}
+                  href={`/notes?page=${totalPages}`}
                   className="flex items-center justify-center min-w-[24px] h-6 px-1 border border-transparent text-neutral-400 hover:text-red-500 hover:border-red-500 rounded"
                 >
                   {totalPages}
@@ -83,7 +69,7 @@ export default async function Home({ searchParams }: { searchParams: { page?: st
           </div>
           {page < totalPages && (
             <Link
-              href={`/?page=${page + 1}`}
+              href={`/notes?page=${page + 1}`}
               className="flex items-center text-sm border rounded px-2 h-6 text-neutral-400 border-neutral-600 hover:text-red-500 hover:border-red-500 transition-colors"
             >
               下一个 <span className="ml-1">›</span>
@@ -93,4 +79,4 @@ export default async function Home({ searchParams }: { searchParams: { page?: st
       )}
     </div>
   )
-}
+} 

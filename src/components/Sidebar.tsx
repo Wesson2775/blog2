@@ -31,17 +31,9 @@ export default function Sidebar() {
   }, [])
 
   return (
-    <div className="w-80 p-6">
+    <div className="w-[200px] p-6">
       {/* 头像和博客信息 */}
       <div className="flex flex-col mb-8">
-        <div className="relative w-24 h-24 mb-4">
-          <Image
-            src="/avatar.jpg"
-            alt="Avatar"
-            fill
-            className="rounded-full object-cover"
-          />
-        </div>
         <h1 className="text-xl font-bold text-white mb-2">只抄</h1>
         <p className="text-sm text-gray-400">
           个人技术博客，分享技术探索和生活感悟

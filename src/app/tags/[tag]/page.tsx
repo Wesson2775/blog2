@@ -23,60 +23,82 @@ export default async function TagPostsPage({ params, searchParams }: { params: {
 
   if (!tag) {
     return (
-      <div className="mx-auto max-w-3xl px-4 pt-12 pb-24 bg-[#181f2a] min-h-screen text-white flex flex-col items-center justify-center">
+      <div className="mx-auto max-w-3xl px-4 flex flex-col items-center justify-center">
         <BackButton />
-        <div>标签不存在或参数错误。</div>
+        <div className="text-neutral-400">标签不存在或参数错误。</div>
       </div>
     )
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 pt-12 pb-24 bg-[#181f2a] min-h-screen">
-      <h1 className="text-2xl font-bold text-white mb-6">标签：{tag}</h1>
-      <div className="space-y-8">
-        {posts.length === 0 && <div className="text-white">没有找到相关文章。</div>}
+    <div className="mx-auto max-w-3xl px-4">
+      <h1 className="text-2xl mb-8">标签：{tag}</h1>
+      <div className="space-y-12">
+        {posts.length === 0 && <div className="text-neutral-400">没有找到相关文章。</div>}
         {posts.map((post: Post) => (
-          <div key={post.id}>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-xs text-red-400 font-semibold">
+          <article key={post.id} className="group">
+            <div className="mb-2 text-sm text-neutral-400 flex gap-5">
+              <time dateTime={post.createdAt.toISOString()}>
                 {format(post.createdAt, 'yyyy/MM/dd', { locale: zhCN })}
-              </span>
-              {Boolean((post as any).pinned) && (
-                <span className="text-xs text-red-500 font-bold border border-red-200 rounded px-1">[置顶]</span>
+              </time>
+              {post.tags.length > 0 && (
+                <div className="flex gap-1">
+                  {post.tags.map((tag: Tag, index: number) => (
+                    <Link href={`/tags/${encodeURIComponent(tag.name)}`} key={tag.id}>
+                      <span className="text-red-400 hover:text-red-500">
+                        {tag.name}
+                        {index < post.tags.length - 1 && ' '}
+                      </span>
+                    </Link>
+                  ))}
+                </div>
               )}
-              {post.tags.map((tag: Tag) => (
-                <span
-                  key={tag.id}
-                  className="text-xs text-red-400 px-1 rounded cursor-pointer transition-colors border border-transparent hover:border-red-400 hover:text-red-500"
-                  style={{ background: 'none' }}
-                >
-                  {tag.name}
-                </span>
-              ))}
+              {post.pinned && <span>[置顶]</span>}
             </div>
-            <Link href={`/blog/${post.slug}`} className="block text-base font-bold text-white hover:text-primary mb-1">
-              {post.title}
+            <Link href={`/blog/${post.slug}`}>
+              <h2 className="text-m mb-2 hover:text-red-400 transition-colors">{post.title}</h2>
             </Link>
-            <div className="text-xs text-neutral-300 line-clamp-2">
-              {post.excerpt}
-            </div>
-          </div>
+            <p className="text-neutral-400 text-sm line-clamp-2">{post.content}</p>
+          </article>
         ))}
       </div>
-      {/* 分页器UI */}
+
       {totalPages > 1 && (
-        <div className="flex justify-center mt-6">
-          <nav className="inline-flex items-center space-x-2 text-xs select-none">
-            {Array.from({ length: totalPages }).map((_, i) => (
+        <div className="flex justify-between items-center my-12">
+          <div className="flex gap-2">
+            {Array.from({ length: Math.min(4, totalPages) }).map((_, i) => (
               <Link
                 key={i}
                 href={`/tags/${encodeURIComponent(tag)}?page=${i + 1}`}
-                className={`w-8 h-8 rounded border ${page === i + 1 ? 'border-red-500 bg-red-500 text-white font-bold' : 'border-transparent text-red-500 hover:border-red-500 hover:text-red-500'} flex items-center justify-center transition-colors`}
+                className={`flex items-center justify-center min-w-[24px] h-6 px-1 rounded border transition-colors ${
+                  page === i + 1 
+                    ? 'bg-red-500 text-white border-transparent' 
+                    : 'border-transparent text-neutral-400 hover:text-red-500 hover:border-red-500'
+                }`}
               >
                 {i + 1}
               </Link>
             ))}
-          </nav>
+            {totalPages > 4 && (
+              <>
+                <span className="text-neutral-400">...</span>
+                <Link
+                  href={`/tags/${encodeURIComponent(tag)}?page=${totalPages}`}
+                  className="flex items-center justify-center min-w-[24px] h-6 px-1 border border-transparent text-neutral-400 hover:text-red-500 hover:border-red-500 rounded"
+                >
+                  {totalPages}
+                </Link>
+              </>
+            )}
+          </div>
+          {page < totalPages && (
+            <Link
+              href={`/tags/${encodeURIComponent(tag)}?page=${page + 1}`}
+              className="flex items-center text-sm border rounded px-2 h-6 text-neutral-400 border-neutral-600 hover:text-red-500 hover:border-red-500 transition-colors"
+            >
+              下一个 <span className="ml-1">›</span>
+            </Link>
+          )}
         </div>
       )}
       <BackButton />

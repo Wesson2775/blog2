@@ -19,6 +19,15 @@ export default function NewPost() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault()
+    // 生成更规范的 slug，处理中文字符
+    const slug = title
+      .trim()
+      .toLowerCase()
+      .replace(/[^\w\u4e00-\u9fa5\s-]/g, '') // 保留中文、字母、数字、空格和连字符
+      .replace(/\s+/g, '-') // 空格替换为连字符
+      .replace(/-+/g, '-') // 多个连字符替换为单个
+      + '-' + Date.now() // 添加时间戳确保唯一性
+    
     const res = await fetch('/api/admin/posts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -29,7 +38,7 @@ export default function NewPost() {
         pinned,
         published,
         createdAt: createdAt || new Date().toISOString(),
-        slug: title.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now()
+        slug
       })
     })
     if (res.ok) {

@@ -22,7 +22,7 @@ export default async function BlogPage({ searchParams }: { searchParams: { page?
   const totalPages = Math.ceil(total / pageSize)
 
   return (
-    <div className="min-h-screen bg-[#181f2a] py-12">
+    <div className="min-h-screen bg-[#181f2a]">
       <div className="mx-auto max-w-3xl px-4 space-y-10">
         {posts.map((post: Post) => (
           <div key={post.id} className="">

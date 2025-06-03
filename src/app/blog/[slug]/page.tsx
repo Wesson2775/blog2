@@ -1,5 +1,4 @@
 import { notFound } from 'next/navigation'
-import Navbar from '@/components/Navbar'
 import { prisma } from '@/lib/prisma'
 import { format } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
@@ -13,9 +12,10 @@ interface PostPageProps {
 }
 
 export default async function PostPage({ params }: PostPageProps) {
+  const decodedSlug = decodeURIComponent(params.slug)
   const post = await prisma.post.findUnique({
     where: {
-      slug: params.slug,
+      slug: decodedSlug,
       published: true,
     },
     include: {
@@ -27,51 +27,33 @@ export default async function PostPage({ params }: PostPageProps) {
     notFound()
   }
 
-  // 目录生成（简单示例，实际可用 remark-toc 或自定义）
-  const toc = post.content.match(/^#+\s.+/gm)?.map((line: string, i: number) => {
-    const level = line.match(/^#+/)[0].length
-    const text = line.replace(/^#+\s/, '')
-    return { level, text, id: `toc-${i}` }
-  }) || []
-
   return (
-    <>
-      <Navbar />
-      <div className="mx-auto max-w-2xl px-4 pt-12 pb-24 bg-white dark:bg-neutral-900">
-        <h1 className="text-3xl font-bold text-center mb-2">{post.title}</h1>
-        <div className="text-center text-sm text-muted-foreground mb-4">
-          {format(post.createdAt, 'yyyy-MM-dd', { locale: zhCN })}
-          {post.tags.length > 0 && (
-            <>
-              {' / '}
-              {post.tags.map((tag: Tag) => (
-                <span key={tag.id} className="inline-block mx-1 text-xs text-red-400">{tag.name}</span>
-              ))}
-            </>
-          )}
+    <div className="mx-auto max-w-3xl px-4 py-12">
+      <article>
+        <header className="text-center mb-12">
+          <h1 className="text-3xl font-normal mb-4">{post.title}</h1>
+          <div className="flex items-center justify-center gap-2 text-sm text-neutral-400">
+            <time dateTime={post.createdAt.toISOString()}>
+              {format(post.createdAt, 'yyyy/MM/dd', { locale: zhCN })}
+            </time>
+            {post.tags.length > 0 && (
+              <>
+                <span> . </span>
+                {post.tags.map((tag: Tag, index: number) => (
+                  <span key={tag.id}>
+                    {tag.name}
+                    {index < post.tags.length - 1 && ', '}
+                  </span>
+                ))}
+              </>
+            )}
+          </div>
+        </header>
+        
+        <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <MDXContent content={post.content} />
         </div>
-        <div className="flex gap-8">
-          {/* 目录卡片 */}
-          {toc.length > 0 && (
-            <aside className="w-48 flex-shrink-0 hidden md:block">
-              <div className="border border-border rounded bg-white/80 dark:bg-neutral-800 p-4 text-xs mb-6">
-                <div className="font-bold text-red-500 mb-2">Contents</div>
-                <ul className="space-y-1">
-                  {toc.map((item, idx) => (
-                    <li key={item.id} className="ml-2" style={{ marginLeft: (item.level - 1) * 12 }}>
-                      <a href={`#${item.id}`} className="hover:underline text-foreground">{item.text}</a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </aside>
-          )}
-          {/* 正文内容 */}
-          <article className="prose dark:prose-invert max-w-none flex-1">
-            <MDXContent content={post.content} />
-          </article>
-        </div>
-      </div>
-    </>
+      </article>
+    </div>
   )
 } 
