@@ -12,18 +12,18 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
 
 // 编辑文章
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
-  const { title, content, tags, pinned, published } = await req.json()
+  const body = await req.json()
+  const data: any = {}
+  if (typeof body.title !== 'undefined') data.title = body.title
+  if (typeof body.content !== 'undefined') data.content = body.content
+  if (typeof body.pinned !== 'undefined') data.pinned = body.pinned
+  if (typeof body.published !== 'undefined') data.published = body.published
+  if (Array.isArray(body.tags)) {
+    data.tags = { set: body.tags.map((id: string) => ({ id })) }
+  }
   const post = await prisma.post.update({
     where: { id: params.id },
-    data: {
-      title,
-      content,
-      pinned,
-      published,
-      tags: {
-        set: tags.map((id: string) => ({ id }))
-      }
-    },
+    data,
     include: { tags: true }
   })
   return NextResponse.json(post)
