@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
+import { Prisma } from '@prisma/client'
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -7,12 +8,22 @@ export async function GET(request: Request) {
   const page = parseInt(searchParams.get('page') || '1', 10)
   const pageSize = 5
 
-  const where = q
+  const where: Prisma.PostWhereInput = q
     ? {
         published: true,
         OR: [
-          { title: { contains: q, mode: 'insensitive' } },
-          { content: { contains: q, mode: 'insensitive' } },
+          {
+            title: {
+              contains: q,
+              mode: Prisma.QueryMode.insensitive,
+            },
+          },
+          {
+            content: {
+              contains: q,
+              mode: Prisma.QueryMode.insensitive,
+            },
+          },
         ],
       }
     : { published: true }

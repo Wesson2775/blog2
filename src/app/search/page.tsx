@@ -2,19 +2,20 @@ import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import { format } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
-import { Post, Tag } from '@/types/post'
+import { Post } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 import BackButton from '@/components/BackButton'
 
 export default async function SearchPage({ searchParams }: { searchParams: { q?: string, page?: string } }) {
   const q = searchParams.q?.trim() || ''
   const page = parseInt(searchParams.page || '1', 10)
   const pageSize = 5
-  const where = q
+  const where: Prisma.PostWhereInput = q
     ? {
         published: true,
         OR: [
-          { title: { contains: q, mode: 'insensitive' } },
-          { content: { contains: q, mode: 'insensitive' } },
+          { title: { contains: q, mode: Prisma.QueryMode.insensitive } },
+          { content: { contains: q, mode: Prisma.QueryMode.insensitive } },
         ],
       }
     : { published: true }
@@ -35,7 +36,7 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
       <h1 className="text-2xl mb-8">搜索：{q}</h1>
       <div className="space-y-12">
         {posts.length === 0 && <div className="text-neutral-400">没有找到相关文章。</div>}
-        {posts.map((post: Post) => (
+        {posts.map((post) => (
           <article key={post.id} className="group">
             <div className="mb-2 text-sm text-neutral-400 flex gap-5">
               <time dateTime={post.createdAt.toISOString()}>
@@ -43,7 +44,7 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
               </time>
               {post.tags.length > 0 && (
                 <div className="flex gap-1">
-                  {post.tags.map((tag: Tag, index: number) => (
+                  {post.tags.map((tag, index) => (
                     <span key={tag.id} className="text-red-400">
                       {tag.name}
                       {index < post.tags.length - 1 && ' '}

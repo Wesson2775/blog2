@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { format } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
-import { Post, Tag } from '@/types/post'
+import { Post } from '@prisma/client'
 
 export default async function BlogPage({ searchParams }: { searchParams: { page?: string } }) {
   const page = parseInt(searchParams.page || '1', 10)
@@ -24,7 +24,7 @@ export default async function BlogPage({ searchParams }: { searchParams: { page?
   return (
     <div className="min-h-screen bg-[#181f2a]">
       <div className="mx-auto max-w-3xl px-4 space-y-10">
-        {posts.map((post: Post) => (
+        {posts.map((post) => (
           <div key={post.id} className="">
             <div className="text-xs text-red-400 mb-1">{format(post.createdAt, 'yyyy/MM/dd', { locale: zhCN })}</div>
             <div className="text-sm text-neutral-300 line-clamp-2">

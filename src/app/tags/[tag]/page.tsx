@@ -2,7 +2,7 @@ import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import { format } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
-import { Post, Tag } from '@/types/post'
+import { Post } from '@prisma/client'
 import BackButton from '@/components/BackButton'
 
 export default async function TagPostsPage({ params, searchParams }: { params: { tag: string }, searchParams: { page?: string } }) {
@@ -35,7 +35,7 @@ export default async function TagPostsPage({ params, searchParams }: { params: {
       <h1 className="text-2xl mb-8">标签：{tag}</h1>
       <div className="space-y-12">
         {posts.length === 0 && <div className="text-neutral-400">没有找到相关文章。</div>}
-        {posts.map((post: Post) => (
+        {posts.map((post) => (
           <article key={post.id} className="group">
             <div className="mb-2 text-sm text-neutral-400 flex gap-5">
               <time dateTime={post.createdAt.toISOString()}>
@@ -43,7 +43,7 @@ export default async function TagPostsPage({ params, searchParams }: { params: {
               </time>
               {post.tags.length > 0 && (
                 <div className="flex gap-1">
-                  {post.tags.map((tag: Tag, index: number) => (
+                  {post.tags.map((tag, index) => (
                     <Link href={`/tags/${encodeURIComponent(tag.name)}`} key={tag.id}>
                       <span className="text-red-400 hover:text-red-500">
                         {tag.name}
