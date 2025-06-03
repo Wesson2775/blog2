@@ -38,9 +38,11 @@ model Note {
 }
 
 model Tag {
-  id    String @id @default(cuid())
-  name  String @unique
-  posts Post[]
+  id        String   @id @default(cuid())
+  name      String   @unique
+  posts     Post[]
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
 }
 
 model Music {
@@ -49,14 +51,18 @@ model Music {
   artist  String?
   cover   String?
   src     String
+  published Boolean @default(false)
   createdAt DateTime @default(now())
 }
 
 model SiteConfig {
-  id          String  @id @default(cuid())
+  id          String   @id @default(cuid())
   title       String
+  subtitle    String
+  github      String
+  email       String
   description String
-  notice      String?
+  createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
@@ -73,6 +79,7 @@ model Link {
   name        String
   url         String
   description String?
+  published Boolean @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

@@ -4,7 +4,10 @@ import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import 'bytemd/dist/index.css'
 
-const ByteMD = dynamic<any>(() => import('@bytemd/react').then(mod => mod.default || mod.Editor), { ssr: false })
+const ByteMD = dynamic(() => import('@bytemd/react').then(mod => mod.Editor), { 
+  ssr: false,
+  loading: () => <div className="h-[300px] bg-[#232b3b] rounded animate-pulse" />
+})
 
 export default function NewPost() {
   const [title, setTitle] = useState('')
@@ -30,6 +33,7 @@ export default function NewPost() {
       .replace(/[^\w\u4e00-\u9fa5\s-]/g, '') // 保留中文、字母、数字、空格和连字符
       .replace(/\s+/g, '-') // 空格替换为连字符
       .replace(/-+/g, '-') // 多个连字符替换为单个
+      .replace(/^-+|-+$/g, '') // 移除首尾连字符
       + '-' + Date.now() // 添加时间戳确保唯一性
     
     const res = await fetch('/api/admin/posts', {
@@ -57,7 +61,7 @@ export default function NewPost() {
       <h1 className="text-2xl font-bold mb-6 text-neutral-200">新建文章</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
-          className="w-full p-2 rounded bg-[#181f2a] text-gray-200 border border-[#2a3441] placeholder:text-gray-400 focus:ring-2 focus:ring-red-400"
+          className="w-full p-2 rounded bg-[#181f2a] text-neutral-200 border border-[#2a3441]"
           placeholder="标题"
           value={title}
           onChange={e => setTitle(e.target.value)}
@@ -65,7 +69,7 @@ export default function NewPost() {
         />
         <input
           type="datetime-local"
-          className="w-full p-2 rounded bg-[#181f2a] text-gray-200 border border-[#2a3441] focus:ring-2 focus:ring-red-400"
+          className="w-full p-2 rounded bg-[#181f2a] text-neutral-200 border border-[#2a3441]"
           placeholder="日期（可选，默认当前时间）"
           value={createdAt}
           onChange={e => setCreatedAt(e.target.value)}
@@ -78,7 +82,6 @@ export default function NewPost() {
               value={content}
               onChange={setContent}
               previewDebounce={0}
-              previewClassName="prose dark:prose-invert max-w-none text-base"
             />
           </div>
         </div>
@@ -98,17 +101,34 @@ export default function NewPost() {
           </select>
         </div>
         <div className="flex gap-4 items-center">
-          <label className="text-neutral-200 flex items-center gap-2">
-            <span>是否发布</span>
-            <button
-              type="button"
-              className={`relative w-11 h-6 rounded-full transition-colors duration-200 focus:outline-none ${published ? 'bg-green-400' : 'bg-gray-400'}`}
-              onClick={() => setPublished(!published)}
-              title={published ? '已发布，点击关闭' : '未发布，点击开启'}
-            >
-              <span className={`absolute left-1 top-1 w-4 h-4 rounded-full bg-white shadow-md transition-transform duration-200 ${published ? 'translate-x-5' : ''}`}></span>
-            </button>
-          </label>
+          <span className="text-neutral-200">是否置顶</span>
+          <button
+            type="button"
+            aria-label="Toggle pinned status"
+            onClick={() => setPinned(!pinned)}
+            className={`relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400 ${pinned ? 'bg-green-400' : 'bg-gray-400'}`}
+            title={pinned ? '已置顶，点击取消' : '未置顶，点击置顶'}
+          >
+            <span
+              aria-hidden="true"
+              className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200 ${pinned ? 'translate-x-5' : 'translate-x-0'}`}
+            ></span>
+          </button>
+        </div>
+        <div className="flex gap-4 items-center">
+          <span className="text-neutral-200">是否发布</span>
+          <button
+            type="button"
+            aria-label="Toggle published status"
+            onClick={() => setPublished(!published)}
+            className={`relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400 ${published ? 'bg-green-400' : 'bg-gray-400'}`}
+            title={published ? '已发布，点击关闭' : '未发布，点击开启'}
+          >
+            <span
+              aria-hidden="true"
+              className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200 ${published ? 'translate-x-5' : 'translate-x-0'}`}
+            ></span>
+          </button>
         </div>
         {error && <div className="text-red-400">{error}</div>}
         <button type="submit" className="bg-red-400 hover:bg-red-400 text-neutral-200 rounded px-4 py-2 font-bold">保存</button>

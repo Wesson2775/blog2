@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "SiteConfig" ALTER COLUMN "email" DROP DEFAULT,
+ALTER COLUMN "github" DROP DEFAULT,
+ALTER COLUMN "subtitle" DROP DEFAULT;

@@ -2,30 +2,30 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
-export default function EditNote({ params }: { params: { id: string } }) {
-  const [content, setContent] = useState('')
-  const [published, setPublished] = useState(true)
+export default function EditTag({ params }: { params: { id: string } }) {
+  const [name, setName] = useState('')
+  const [published, setPublished] = useState(false)
   const [error, setError] = useState('')
   const router = useRouter()
 
   useEffect(() => {
-    fetch(`/api/admin/notes/${params.id}`)
+    fetch(`/api/admin/tags/${params.id}`)
       .then(res => res.json())
       .then(data => {
-        setContent(data.content)
+        setName(data.name)
         setPublished(data.published)
       })
   }, [params.id])
 
   const handleSubmit = async (e: any) => {
     e.preventDefault()
-    const res = await fetch(`/api/admin/notes/${params.id}`, {
+    const res = await fetch(`/api/admin/tags/${params.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content, published })
+      body: JSON.stringify({ name, published })
     })
     if (res.ok) {
-      router.push('/admin/notes')
+      router.push('/admin/tags')
     } else {
       setError('保存失败')
     }
@@ -33,13 +33,13 @@ export default function EditNote({ params }: { params: { id: string } }) {
 
   return (
     <div className="max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6 text-neutral-200">编辑笔记</h1>
+      <h1 className="text-2xl font-bold mb-6 text-neutral-200">编辑标签</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <textarea
-          className="w-full p-2 rounded bg-[#181f2a] text-neutral-200 border border-[#2a3441] min-h-[120px]"
-          placeholder="内容 (支持 Markdown)"
-          value={content}
-          onChange={e => setContent(e.target.value)}
+        <input
+          className="w-full p-2 rounded bg-[#181f2a] text-neutral-200 border border-[#2a3441]"
+          placeholder="名称"
+          value={name}
+          onChange={e => setName(e.target.value)}
           required
         />
         <div className="flex gap-4 items-center">

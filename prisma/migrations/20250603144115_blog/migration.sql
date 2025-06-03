@@ -1,0 +1,9 @@
+-- AlterTable
+ALTER TABLE "Link" ADD COLUMN     "published" BOOLEAN NOT NULL DEFAULT false;
+
+-- AlterTable
+ALTER TABLE "Music" ADD COLUMN     "published" BOOLEAN NOT NULL DEFAULT false;
+
+-- AlterTable
+ALTER TABLE "Tag" ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "published" BOOLEAN NOT NULL DEFAULT false;

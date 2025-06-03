@@ -2,30 +2,36 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
-export default function EditNote({ params }: { params: { id: string } }) {
-  const [content, setContent] = useState('')
-  const [published, setPublished] = useState(true)
+export default function EditMusic({ params }: { params: { id: string } }) {
+  const [title, setTitle] = useState('')
+  const [artist, setArtist] = useState('')
+  const [cover, setCover] = useState('')
+  const [src, setSrc] = useState('')
+  const [published, setPublished] = useState(false)
   const [error, setError] = useState('')
   const router = useRouter()
 
   useEffect(() => {
-    fetch(`/api/admin/notes/${params.id}`)
+    fetch(`/api/admin/music/${params.id}`)
       .then(res => res.json())
       .then(data => {
-        setContent(data.content)
+        setTitle(data.title)
+        setArtist(data.artist)
+        setCover(data.cover)
+        setSrc(data.src)
         setPublished(data.published)
       })
   }, [params.id])
 
   const handleSubmit = async (e: any) => {
     e.preventDefault()
-    const res = await fetch(`/api/admin/notes/${params.id}`, {
+    const res = await fetch(`/api/admin/music/${params.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content, published })
+      body: JSON.stringify({ id: params.id, title, artist, cover, src, published })
     })
     if (res.ok) {
-      router.push('/admin/notes')
+      router.push('/admin/music')
     } else {
       setError('保存失败')
     }
@@ -33,13 +39,32 @@ export default function EditNote({ params }: { params: { id: string } }) {
 
   return (
     <div className="max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6 text-neutral-200">编辑笔记</h1>
+      <h1 className="text-2xl font-bold mb-6 text-neutral-200">编辑音乐</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <textarea
-          className="w-full p-2 rounded bg-[#181f2a] text-neutral-200 border border-[#2a3441] min-h-[120px]"
-          placeholder="内容 (支持 Markdown)"
-          value={content}
-          onChange={e => setContent(e.target.value)}
+        <input
+          className="w-full p-2 rounded bg-[#181f2a] text-neutral-200 border border-[#2a3441]"
+          placeholder="歌曲名称"
+          value={title}
+          onChange={e => setTitle(e.target.value)}
+          required
+        />
+        <input
+          className="w-full p-2 rounded bg-[#181f2a] text-neutral-200 border border-[#2a3441]"
+          placeholder="歌手"
+          value={artist}
+          onChange={e => setArtist(e.target.value)}
+        />
+        <input
+          className="w-full p-2 rounded bg-[#181f2a] text-neutral-200 border border-[#2a3441]"
+          placeholder="封面图片URL"
+          value={cover}
+          onChange={e => setCover(e.target.value)}
+        />
+        <input
+          className="w-full p-2 rounded bg-[#181f2a] text-neutral-200 border border-[#2a3441]"
+          placeholder="音频文件URL"
+          value={src}
+          onChange={e => setSrc(e.target.value)}
           required
         />
         <div className="flex gap-4 items-center">

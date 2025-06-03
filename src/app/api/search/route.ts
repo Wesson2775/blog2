@@ -32,7 +32,13 @@ export async function GET(request: Request) {
     const [posts, total] = await Promise.all([
       prisma.post.findMany({
         where,
-        include: { tags: true },
+        include: { 
+          tags: {
+            where: {
+              published: true
+            }
+          }
+        },
         orderBy: [{ pinned: 'desc' }, { createdAt: 'desc' }],
         skip: (page - 1) * pageSize,
         take: pageSize,

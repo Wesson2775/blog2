@@ -22,6 +22,26 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const menuBtnRef = useRef<HTMLButtonElement>(null)
+  const [siteConfig, setSiteConfig] = useState({
+    title: '只抄',
+    subtitle: '个人技术博客，分享技术探索和生活感悟',
+    github: 'http://github.com/wesson2775',
+    email: '862832617@qq.com'
+  })
+
+  useEffect(() => {
+    const fetchSiteConfig = async () => {
+      try {
+        const response = await fetch('/api/admin/site')
+        const data = await response.json()
+        setSiteConfig(data)
+      } catch (error) {
+        console.error('获取站点配置失败:', error)
+      }
+    }
+
+    fetchSiteConfig()
+  }, [])
 
   // 全局快捷键监听
   useEffect(() => {
@@ -63,7 +83,7 @@ export default function Navbar() {
                 height={32}
                 className="rounded-full"
               />
-              <Link href="/" className="text-xl font-bold text-neutral-200 ml-1">只抄</Link>
+              <Link href="/" className="text-xl font-bold text-neutral-200 ml-1">{siteConfig.title}</Link>
               {/* 搜索框，严格还原截图样式 */}
               <form
                 action="/search"
@@ -105,7 +125,7 @@ export default function Navbar() {
               {/* 1280px以上显示 GitHub/邮箱图标 */}
               <div className="hidden xl:flex items-center space-x-2 ml-4">
                 <a
-                  href="https://github.com/yourusername"
+                  href={siteConfig.github}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center w-8 h-8 rounded-full bg-muted hover:bg-border transition-colors"
@@ -114,7 +134,7 @@ export default function Navbar() {
                   <Github className="w-5 h-5 text-gray-400" />
                 </a>
                 <a
-                  href="mailto:your.email@example.com"
+                  href={`mailto:${siteConfig.email}`}
                   className="flex items-center justify-center w-8 h-8 rounded-full bg-muted hover:bg-border transition-colors"
                   aria-label="Email"
                 >
@@ -140,7 +160,7 @@ export default function Navbar() {
                     style={{ minWidth: 80 }}
                   >
                     <a
-                      href="https://github.com/yourusername"
+                      href={siteConfig.github}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-border transition-colors"
@@ -149,7 +169,7 @@ export default function Navbar() {
                       <Github className="w-5 h-5 text-gray-400" />
                     </a>
                     <a
-                      href="mailto:your.email@example.com"
+                      href={`mailto:${siteConfig.email}`}
                       className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-border transition-colors"
                       aria-label="Email"
                     >
@@ -185,7 +205,7 @@ export default function Navbar() {
                         ))}
                         <div className="flex gap-6 mt-2">
                           <a
-                            href="https://github.com/yourusername"
+                            href={siteConfig.github}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-border transition-colors"
@@ -194,7 +214,7 @@ export default function Navbar() {
                             <Github className="w-6 h-6 text-neutral-200" />
                           </a>
                           <a
-                            href="mailto:your.email@example.com"
+                            href={`mailto:${siteConfig.email}`}
                             className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-border transition-colors"
                             aria-label="Email"
                           >

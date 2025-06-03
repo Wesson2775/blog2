@@ -3,13 +3,49 @@ import { NextResponse } from 'next/server'
 
 // 获取所有标签
 export async function GET() {
-  const tags = await prisma.tag.findMany({ orderBy: { name: 'asc' } })
-  return NextResponse.json(tags)
+  try {
+    const tags = await prisma.tag.findMany({
+      include: {
+        _count: {
+          select: {
+            posts: true
+          }
+        }
+      },
+      orderBy: {
+        name: 'asc'
+      }
+    })
+    return NextResponse.json(tags)
+  } catch (error) {
+    console.error('Error fetching tags:', error)
+    return NextResponse.json({ error: 'Failed to fetch tags' }, { status: 500 })
+  }
 }
 
 // 新建标签
-export async function POST(req: Request) {
-  const { name } = await req.json()
-  const tag = await prisma.tag.create({ data: { name } })
+export async function POST(request: Request) {
+  try {
+    const { name } = await request.json()
+    const tag = await prisma.tag.create({
+      data: {
+        name,
+        published: true
+      }
+    })
+    return NextResponse.json(tag)
+  } catch (error) {
+    console.error('Error creating tag:', error)
+    return NextResponse.json({ error: 'Failed to create tag' }, { status: 500 })
+  }
+}
+
+// 更新标签
+export async function PUT(req: Request) {
+  const { id, published } = await req.json()
+  const tag = await prisma.tag.update({
+    where: { id },
+    data: { published }
+  })
   return NextResponse.json(tag)
 } 

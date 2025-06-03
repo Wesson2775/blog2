@@ -1,63 +1,63 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-export default function EditLink({ params }: { params: { id: string } }) {
-  const [name, setName] = useState('')
-  const [url, setUrl] = useState('')
-  const [description, setDescription] = useState('')
-  const [published, setPublished] = useState(false)
+export default function NewMusic() {
+  const [title, setTitle] = useState('')
+  const [artist, setArtist] = useState('')
+  const [cover, setCover] = useState('')
+  const [src, setSrc] = useState('')
+  const [published, setPublished] = useState(true) // Default to published
   const [error, setError] = useState('')
   const router = useRouter()
 
-  useEffect(() => {
-    fetch(`/api/admin/links/${params.id}`)
-      .then(res => res.json())
-      .then(data => {
-        setName(data.name)
-        setUrl(data.url)
-        setDescription(data.description)
-        setPublished(data.published)
-      })
-  }, [params.id])
-
   const handleSubmit = async (e: any) => {
     e.preventDefault()
-    const res = await fetch('/api/admin/links', {
-      method: 'PUT',
+    if (!title.trim() || !src.trim()) {
+      setError('歌曲名称和音频链接不能为空')
+      return
+    }
+    const res = await fetch('/api/admin/music', {
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: params.id, name, url, description, published })
+      body: JSON.stringify({ title, artist, cover, src, published })
     })
     if (res.ok) {
-      router.push('/admin/links')
+      router.push('/admin/music')
     } else {
-      setError('保存失败')
+      setError('创建音乐失败')
     }
   }
 
   return (
     <div className="max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6 text-neutral-200">编辑友情链接</h1>
+      <h1 className="text-2xl font-bold mb-6 text-neutral-200">新建音乐</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           className="w-full p-2 rounded bg-[#181f2a] text-neutral-200 border border-[#2a3441]"
-          placeholder="名称"
-          value={name}
-          onChange={e => setName(e.target.value)}
+          placeholder="歌曲名称"
+          value={title}
+          onChange={e => setTitle(e.target.value)}
           required
         />
         <input
           className="w-full p-2 rounded bg-[#181f2a] text-neutral-200 border border-[#2a3441]"
-          placeholder="链接"
-          value={url}
-          onChange={e => setUrl(e.target.value)}
-          required
+          placeholder="歌手（可选）"
+          value={artist}
+          onChange={e => setArtist(e.target.value)}
         />
         <input
           className="w-full p-2 rounded bg-[#181f2a] text-neutral-200 border border-[#2a3441]"
-          placeholder="描述"
-          value={description}
-          onChange={e => setDescription(e.target.value)}
+          placeholder="封面图片URL（可选）"
+          value={cover}
+          onChange={e => setCover(e.target.value)}
+        />
+        <input
+          className="w-full p-2 rounded bg-[#181f2a] text-neutral-200 border border-[#2a3441]"
+          placeholder="音频文件URL"
+          value={src}
+          onChange={e => setSrc(e.target.value)}
+          required
         />
         <div className="flex gap-4 items-center">
           <span className="text-neutral-200">是否发布</span>
@@ -75,7 +75,7 @@ export default function EditLink({ params }: { params: { id: string } }) {
           </button>
         </div>
         {error && <div className="text-red-400">{error}</div>}
-        <button type="submit" className="bg-red-400 hover:bg-red-400 text-neutral-200 rounded px-4 py-2 font-bold">保存</button>
+        <button type="submit" className="bg-red-400 hover:bg-red-400 text-neutral-200 rounded px-4 py-2 font-bold">创建</button>
       </form>
     </div>
   )

@@ -1,45 +1,40 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-export default function EditNote({ params }: { params: { id: string } }) {
-  const [content, setContent] = useState('')
-  const [published, setPublished] = useState(true)
+export default function NewTag() {
+  const [name, setName] = useState('')
+  const [published, setPublished] = useState(true) // Default to published
   const [error, setError] = useState('')
   const router = useRouter()
 
-  useEffect(() => {
-    fetch(`/api/admin/notes/${params.id}`)
-      .then(res => res.json())
-      .then(data => {
-        setContent(data.content)
-        setPublished(data.published)
-      })
-  }, [params.id])
-
   const handleSubmit = async (e: any) => {
     e.preventDefault()
-    const res = await fetch(`/api/admin/notes/${params.id}`, {
-      method: 'PUT',
+    if (!name.trim()) {
+      setError('标签名称不能为空')
+      return
+    }
+    const res = await fetch('/api/admin/tags', {
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content, published })
+      body: JSON.stringify({ name, published })
     })
     if (res.ok) {
-      router.push('/admin/notes')
+      router.push('/admin/tags')
     } else {
-      setError('保存失败')
+      setError('创建标签失败')
     }
   }
 
   return (
     <div className="max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6 text-neutral-200">编辑笔记</h1>
+      <h1 className="text-2xl font-bold mb-6 text-neutral-200">新建标签</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <textarea
-          className="w-full p-2 rounded bg-[#181f2a] text-neutral-200 border border-[#2a3441] min-h-[120px]"
-          placeholder="内容 (支持 Markdown)"
-          value={content}
-          onChange={e => setContent(e.target.value)}
+        <input
+          className="w-full p-2 rounded bg-[#181f2a] text-neutral-200 border border-[#2a3441]"
+          placeholder="标签名称"
+          value={name}
+          onChange={e => setName(e.target.value)}
           required
         />
         <div className="flex gap-4 items-center">
@@ -58,7 +53,7 @@ export default function EditNote({ params }: { params: { id: string } }) {
           </button>
         </div>
         {error && <div className="text-red-400">{error}</div>}
-        <button type="submit" className="bg-red-400 hover:bg-red-400 text-neutral-200 rounded px-4 py-2 font-bold">保存</button>
+        <button type="submit" className="bg-red-400 hover:bg-red-400 text-neutral-200 rounded px-4 py-2 font-bold">创建</button>
       </form>
     </div>
   )

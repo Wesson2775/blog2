@@ -6,10 +6,37 @@ export default function AdminPosts() {
   const [posts, setPosts] = useState<any[]>([])
   const [search, setSearch] = useState('')
 
-  useEffect(() => {
+  const fetchPosts = () => {
     fetch(`/api/admin/posts?search=${encodeURIComponent(search)}`)
       .then(res => res.json())
       .then(data => setPosts(data))
+  }
+
+  const handleTogglePublish = async (post: any) => {
+    const originalPublished = post.published;
+    // Optimistically update UI
+    setPosts(posts.map((p: any) =>
+      p.id === post.id ? { ...p, published: !originalPublished } : p
+    ));
+
+    const res = await fetch(`/api/admin/posts/${post.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ published: !originalPublished })
+    });
+
+    if (!res.ok) {
+      // Revert UI if API call fails
+      setPosts(posts.map((p: any) =>
+        p.id === post.id ? { ...p, published: originalPublished } : p
+      ));
+      // Optionally show an error message
+      console.error('Failed to update publish status');
+    }
+  }
+
+  useEffect(() => {
+    fetchPosts()
   }, [search])
 
   return (
@@ -44,21 +71,17 @@ export default function AdminPosts() {
               <tr key={post.id} className="border-b border-[#2a3441] text-center">
                 <td className="p-2 text-neutral-200 max-w-[160px] truncate">{post.title}</td>
                 <td className="p-2 text-neutral-200 max-w-[120px] truncate">{post.tags?.map((t: any) => t.name).join(', ')}</td>
-                <td className="p-2 text-neutral-200">
+                <td className="p-2 flex justify-center items-center">
                   <button
-                    className={`relative w-11 h-6 rounded-full transition-colors duration-200 focus:outline-none ${post.published ? 'bg-green-400' : 'bg-gray-400'}`}
-                    onClick={async () => {
-                      await fetch(`/api/admin/posts/${post.id}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ published: !post.published })
-                      })
-                      setPosts(posts.map((p: any) => p.id === post.id ? { ...p, published: !post.published } : p))
-                    }}
+                    aria-label="Toggle published status"
                     title={post.published ? '已发布，点击关闭' : '未发布，点击开启'}
-                    type="button"
+                    onClick={() => handleTogglePublish(post)}
+                    className={`relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400 ${post.published ? 'bg-green-400' : 'bg-gray-400'}`}
                   >
-                    <span className={`absolute left-1 top-1 w-4 h-4 rounded-full bg-white shadow-md transition-transform duration-200 ${post.published ? 'translate-x-5' : ''}`}></span>
+                    <span
+                      aria-hidden="true"
+                      className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200 ${post.published ? 'translate-x-5' : 'translate-x-0'}`}
+                    ></span>
                   </button>
                 </td>
                 <td className="p-2 text-neutral-200 whitespace-nowrap">{post.createdAt ? new Date(post.createdAt).toLocaleString() : ''}</td>
@@ -87,19 +110,15 @@ export default function AdminPosts() {
             <div className="flex justify-between items-center">
               <div className="font-bold text-base text-neutral-200 truncate">{post.title}</div>
               <button
-                className={`relative w-11 h-6 rounded-full transition-colors duration-200 focus:outline-none ${post.published ? 'bg-green-400' : 'bg-gray-400'}`}
-                onClick={async () => {
-                  await fetch(`/api/admin/posts/${post.id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ published: !post.published })
-                  })
-                  setPosts(posts.map((p: any) => p.id === post.id ? { ...p, published: !post.published } : p))
-                }}
+                aria-label="Toggle published status"
                 title={post.published ? '已发布，点击关闭' : '未发布，点击开启'}
-                type="button"
+                onClick={() => handleTogglePublish(post)}
+                className={`relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400 ${post.published ? 'bg-green-400' : 'bg-gray-400'}`}
               >
-                <span className={`absolute left-1 top-1 w-4 h-4 rounded-full bg-white shadow-md transition-transform duration-200 ${post.published ? 'translate-x-5' : ''}`}></span>
+                <span
+                  aria-hidden="true"
+                  className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200 ${post.published ? 'translate-x-5' : 'translate-x-0'}`}
+                ></span>
               </button>
             </div>
             <div className="flex flex-wrap gap-2 text-sm text-gray-400">

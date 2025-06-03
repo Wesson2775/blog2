@@ -1,7 +1,14 @@
 import { prisma } from '@/lib/prisma'
 
 export default async function Links() {
-  const links = await prisma.link.findMany()
+  const links = await prisma.link.findMany({
+    where: {
+      published: true
+    },
+    orderBy: {
+      createdAt: 'desc'
+    }
+  })
 
   return (
     <div className="bg-[#181f2a]">

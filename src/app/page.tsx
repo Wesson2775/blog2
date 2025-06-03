@@ -1,31 +1,40 @@
-import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
+import Link from 'next/link'
 import { format } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
-import { Post, Tag } from '@/types/post'
+import { Post, Tag } from '@prisma/client'
+
+type PostWithTags = Post & {
+  tags: Tag[]
+}
 
 export default async function Home({ searchParams }: { searchParams: { page?: string } }) {
   const page = parseInt(searchParams.page || '1', 10)
   const pageSize = 5
+
   const [posts, total] = await Promise.all([
     prisma.post.findMany({
       where: { published: true },
-      include: { tags: true },
-      orderBy: [
-        { pinned: 'desc' },
-        { createdAt: 'desc' },
-      ],
+      include: { 
+        tags: {
+          where: {
+            published: true
+          }
+        } 
+      },
+      orderBy: [{ pinned: 'desc' }, { createdAt: 'desc' }],
       skip: (page - 1) * pageSize,
       take: pageSize,
     }),
     prisma.post.count({ where: { published: true } }),
-  ])
+  ]) as [PostWithTags[], number]
+
   const totalPages = Math.ceil(total / pageSize)
 
   return (
     <div className="mx-auto max-w-3xl px-4">
       <div className="space-y-4">
-        {(posts as unknown as Post[]).map((post: Post) => (
+        {(posts as unknown as PostWithTags[]).map((post) => (
           <article key={post.id} className="group">
             <div className="mb-1 text-xs text-neutral-400 flex gap-5">
               <time dateTime={post.createdAt.toISOString()}>
@@ -33,7 +42,7 @@ export default async function Home({ searchParams }: { searchParams: { page?: st
               </time>
               {post.tags.length > 0 && (
                 <div className="flex gap-1">
-                  {post.tags.map((tag: Tag, index: number) => (
+                  {post.tags.map((tag, index) => (
                     <Link href={`/tags/${encodeURIComponent(tag.name)}`} key={tag.id}>
                       <span className="text-red-400 hover:text-red-500">
                         {tag.name}
@@ -64,8 +73,8 @@ export default async function Home({ searchParams }: { searchParams: { page?: st
                 href={`/?page=${i + 1}`}
                 className={`flex items-center justify-center min-w-[24px] h-6 px-1 rounded border transition-colors ${
                   page === i + 1 
-                    ? 'bg-red-500 text-neutral-200 border-transparent' 
-                    : 'border-transparent text-neutral-400 hover:text-red-500 hover:border-red-500'
+                    ? 'bg-red-400 text-neutral-200 border-transparent' 
+                    : 'border-transparent text-neutral-400 hover:text-red-400 hover:border-red-400'
                 }`}
               >
                 {i + 1}
@@ -76,7 +85,7 @@ export default async function Home({ searchParams }: { searchParams: { page?: st
                 <span className="text-neutral-400">...</span>
                 <Link
                   href={`/?page=${totalPages}`}
-                  className="flex items-center justify-center min-w-[24px] h-6 px-1 border border-transparent text-neutral-400 hover:text-red-500 hover:border-red-500 rounded"
+                  className="flex items-center justify-center min-w-[24px] h-6 px-1 border border-transparent text-neutral-400 hover:text-red-400 hover:border-red-400 rounded"
                 >
                   {totalPages}
                 </Link>
@@ -86,7 +95,7 @@ export default async function Home({ searchParams }: { searchParams: { page?: st
           {page < totalPages && (
             <Link
               href={`/?page=${page + 1}`}
-              className="flex items-center text-sm border rounded px-2 h-6 text-neutral-400 border-neutral-600 hover:text-red-500 hover:border-red-500 transition-colors"
+              className="flex items-center text-sm border rounded px-2 h-6 text-neutral-400 border-neutral-600 hover:text-red-400 hover:border-red-400 transition-colors"
             >
               下一个 <span className="ml-1">›</span>
             </Link>

@@ -1,4 +1,6 @@
 'use client'
+
+import { prisma } from '@/lib/prisma'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
@@ -140,4 +142,4 @@ export default function EditPost({ params }: { params: { id: string } }) {
       </form>
     </div>
   )
-}
+} 

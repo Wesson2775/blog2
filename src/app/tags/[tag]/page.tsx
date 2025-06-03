@@ -2,32 +2,68 @@ import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import { format } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
-import { Post } from '@prisma/client'
-import BackButton from '@/components/BackButton'
+import { Post, Tag } from '@prisma/client'
+
+type PostWithTags = Post & {
+  tags: Tag[]
+}
 
 export default async function TagPostsPage({ params, searchParams }: { params: { tag: string }, searchParams: { page?: string } }) {
   const tag = decodeURIComponent(params.tag)
   const page = parseInt(searchParams.page || '1', 10)
   const pageSize = 5
+
+  // 首先检查标签是否存在且已发布
+  const tagExists = await prisma.tag.findFirst({
+    where: {
+      name: tag,
+      published: true
+    }
+  })
+
+  if (!tagExists) {
+    return (
+      <div className="mx-auto max-w-3xl px-4 flex flex-col items-center justify-center">
+        <div className="text-neutral-400">标签不存在或未发布。</div>
+      </div>
+    )
+  }
+
   const [posts, total] = await Promise.all([
     prisma.post.findMany({
-      where: { published: true, tags: { some: { name: tag } } },
-      include: { tags: true },
+      where: { 
+        published: true, 
+        tags: { 
+          some: { 
+            name: tag,
+            published: true
+          } 
+        } 
+      },
+      include: { 
+        tags: {
+          where: {
+            published: true
+          }
+        } 
+      },
       orderBy: [ { pinned: 'desc' }, { createdAt: 'desc' } ],
       skip: (page - 1) * pageSize,
       take: pageSize,
     }),
-    prisma.post.count({ where: { published: true, tags: { some: { name: tag } } } }),
-  ])
+    prisma.post.count({ 
+      where: { 
+        published: true, 
+        tags: { 
+          some: { 
+            name: tag,
+            published: true
+          } 
+        } 
+      } 
+    }),
+  ]) as [PostWithTags[], number]
   const totalPages = Math.ceil(total / pageSize)
-
-  if (!tag) {
-    return (
-      <div className="mx-auto max-w-3xl px-4 flex flex-col items-center justify-center">
-        <div className="text-neutral-400">标签不存在或参数错误。</div>
-      </div>
-    )
-  }
 
   return (
     <div className="mx-auto max-w-3xl px-4">

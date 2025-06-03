@@ -11,9 +11,7 @@ export default async function BlogPage({ searchParams }: { searchParams: { page?
     prisma.post.findMany({
       where: { published: true },
       include: { tags: true },
-      orderBy: [
-        { createdAt: 'desc' },
-      ],
+      orderBy: { createdAt: 'desc' },
       skip: (page - 1) * pageSize,
       take: pageSize,
     }),
@@ -27,6 +25,9 @@ export default async function BlogPage({ searchParams }: { searchParams: { page?
         {posts.map((post) => (
           <div key={post.id} className="">
             <div className="text-xs text-red-400 mb-1">{format(post.createdAt, 'yyyy/MM/dd', { locale: zhCN })}</div>
+            <Link href={`/blog/${post.slug}`}>
+              <h2 className="text-base mb-1 hover:text-red-400 transition-colors">{post.title}</h2>
+            </Link>
             <div className="text-sm text-neutral-300 line-clamp-2">
               {post.excerpt}
             </div>
