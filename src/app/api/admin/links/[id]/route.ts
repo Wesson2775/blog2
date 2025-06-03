@@ -1,38 +1,60 @@
-import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma'
 
 // 获取单个友情链接
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
-    const link = await prisma.link.findUnique({ where: { id: params.id } })
+    const link = await prisma.link.findUnique({
+      where: { id: params.id }
+    })
+
     if (!link) {
-      return NextResponse.json({ error: 'Link not found' }, { status: 404 })
+      return new NextResponse('Not Found', { status: 404 })
     }
+
     return NextResponse.json(link)
   } catch (error) {
-    return NextResponse.json({ error: 'Error fetching link' }, { status: 500 })
+    console.error('获取友链失败:', error)
+    return new NextResponse('Internal Server Error', { status: 500 })
   }
 }
 
 // PUT /api/admin/links/:id
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
-    const { name, url, description, published } = await req.json()
-    const updatedLink = await prisma.link.update({
+    const body = await request.json()
+    const { name, url, description } = body
+
+    const link = await prisma.link.update({
       where: { id: params.id },
-      data: { name, url, description, published },
+      data: { name, url, description }
     })
-    return NextResponse.json(updatedLink)
+
+    return NextResponse.json(link)
   } catch (error) {
-    return NextResponse.json({ error: 'Error updating link' }, { status: 500 })
+    console.error('更新友链失败:', error)
+    return new NextResponse('Internal Server Error', { status: 500 })
   }
 }
 
-export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
-    await prisma.link.delete({ where: { id: params.id } })
-    return NextResponse.json({ ok: true })
+    await prisma.link.delete({
+      where: { id: params.id }
+    })
+
+    return new NextResponse(null, { status: 204 })
   } catch (error) {
-    return NextResponse.json({ error: 'Error deleting link' }, { status: 500 })
+    console.error('删除友链失败:', error)
+    return new NextResponse('Internal Server Error', { status: 500 })
   }
 } 
