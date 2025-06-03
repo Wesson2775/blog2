@@ -52,7 +52,7 @@ export default function Navbar() {
   return (
     <>
       <nav className="sticky top-0 z-50 w-full border-b border-border bg-[#181f2a] backdrop-blur">
-        <div className="w-[832px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-full md:max-w-[832px] mx-auto px-2 sm:px-4 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             {/* 左侧 Logo+博客名+搜索框（1280px以上和768-1280px都显示） */}
             <div className="flex items-center">
@@ -159,11 +159,11 @@ export default function Navbar() {
                 )}
               </div>
               {/* 768px以下，显示搜索图标和三横杠，二者并排，修复三横杠弹窗为全屏遮罩+顶部菜单 */}
-              <div className="flex md:hidden items-center ml-2">
-                <button className="p-2" title="搜索" onClick={() => setSearchOpen(true)}>
+              <div className="flex md:hidden items-center ml-0 space-x-1 w-auto">
+                <button className="p-2 flex items-center justify-center" style={{minWidth:36}} title="搜索" onClick={() => setSearchOpen(true)}>
                   <Search className="w-5 h-5 text-neutral-200" />
                 </button>
-                <button className="p-2" title="菜单" onClick={() => setMobileMenuOpen(true)}>
+                <button className="p-2 flex items-center justify-center" style={{minWidth:36}} title="菜单" onClick={() => setMobileMenuOpen(true)}>
                   <Menu className="w-6 h-6 text-neutral-200" />
                 </button>
                 {/* 移动端菜单弹窗：全屏遮罩，顶部为菜单和图标 */}

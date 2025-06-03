@@ -19,11 +19,11 @@ export default function Layout({
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <div className="flex-1 flex gap-8 w-[832px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="flex-1 flex gap-8 max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <main className="flex-1">
           {children}
         </main>
-        <div className="hidden md:block w-[180px]">
+        <div className="hidden md:block min-w-[140px] max-w-[260px] w-1/4">
           <Sidebar />
         </div>
       </div>

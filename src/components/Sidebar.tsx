@@ -31,7 +31,7 @@ export default function Sidebar() {
   }, [])
 
   return (
-    <div className="w-[180px] p-6">
+    <div className="w-full p-6">
       {/* 头像和博客信息 */}
       <div className="flex flex-col mb-8">
         <div className="mb-4">

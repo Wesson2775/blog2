@@ -8,14 +8,15 @@ import BackButton from '@/components/BackButton'
 
 export default async function SearchPage({ searchParams }: { searchParams: { q?: string, page?: string } }) {
   const q = searchParams.q?.trim() || ''
+  console.log('搜索关键词:', q);
   const page = parseInt(searchParams.page || '1', 10)
   const pageSize = 5
   const where: Prisma.PostWhereInput = q
     ? {
         published: true,
         OR: [
-          { title: { contains: q, mode: Prisma.QueryMode.insensitive } },
-          { content: { contains: q, mode: Prisma.QueryMode.insensitive } },
+          { title: { contains: q } },
+          { content: { contains: q } },
         ],
       }
     : { published: true }
@@ -100,7 +101,6 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
           )}
         </div>
       )}
-      <BackButton />
     </div>
   )
 } 

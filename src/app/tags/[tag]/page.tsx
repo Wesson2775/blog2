@@ -24,7 +24,6 @@ export default async function TagPostsPage({ params, searchParams }: { params: {
   if (!tag) {
     return (
       <div className="mx-auto max-w-3xl px-4 flex flex-col items-center justify-center">
-        <BackButton />
         <div className="text-neutral-400">标签不存在或参数错误。</div>
       </div>
     )
@@ -32,7 +31,7 @@ export default async function TagPostsPage({ params, searchParams }: { params: {
 
   return (
     <div className="mx-auto max-w-3xl px-4">
-      <h1 className="text-2xl mb-8">标签：{tag}</h1>
+      <h1 className="text-base mb-8">标签：{tag}</h1>
       <div className="space-y-12">
         {posts.length === 0 && <div className="text-neutral-400">没有找到相关文章。</div>}
         {posts.map((post) => (
@@ -101,7 +100,6 @@ export default async function TagPostsPage({ params, searchParams }: { params: {
           )}
         </div>
       )}
-      <BackButton />
     </div>
   )
 } 

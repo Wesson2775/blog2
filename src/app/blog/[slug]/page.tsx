@@ -29,6 +29,24 @@ export default async function PostPage({ params }: PostPageProps) {
     notFound()
   }
 
+  // 查询上一篇和下一篇
+  const prevPost = await prisma.post.findFirst({
+    where: {
+      published: true,
+      createdAt: { lt: post.createdAt },
+    },
+    orderBy: { createdAt: 'desc' },
+    select: { slug: true, title: true },
+  })
+  const nextPost = await prisma.post.findFirst({
+    where: {
+      published: true,
+      createdAt: { gt: post.createdAt },
+    },
+    orderBy: { createdAt: 'asc' },
+    select: { slug: true, title: true },
+  })
+
   return (
     <div className="mx-auto max-w-3xl px-4">
       <article>
@@ -56,14 +74,17 @@ export default async function PostPage({ params }: PostPageProps) {
           <MDXContent content={post.content} />
         </div>
       </article>
-      <div className="mt-12">
-        <Link 
-          href="/" 
-          className="inline-flex items-center text-sm text-neutral-400 hover:text-red-400 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4 mr-1" />
-          返回
-        </Link>
+      <div className="mt-16 flex justify-between items-center text-sm">
+        {prevPost ? (
+          <Link href={`/blog/${prevPost.slug}`} className="text-neutral-400 hover:text-red-400 transition-colors max-w-[45%] truncate text-left">
+            ← 上一篇：{prevPost.title}
+          </Link>
+        ) : <div />}
+        {nextPost ? (
+          <Link href={`/blog/${nextPost.slug}`} className="text-neutral-400 hover:text-red-400 transition-colors max-w-[45%] truncate text-right ml-auto">
+            下一篇：{nextPost.title} →
+          </Link>
+        ) : <div />}
       </div>
     </div>
   )
