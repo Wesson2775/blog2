@@ -3,20 +3,42 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { useRouter } from 'next/navigation'
+import { useSession } from "next-auth/react";
 
 export default function AdminTags() {
+  const { data: session, status } = useSession();
+  const router = useRouter()
   const [tags, setTags] = useState<any[]>([])
   const [newTag, setNewTag] = useState('')
   const [error, setError] = useState('')
   const [search, setSearch] = useState('')
-  const router = useRouter()
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.replace("/admin/login");
+    }
+  }, [status, router]);
+
+  if (status === "loading") {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[#181f2a]">
+        <div className="text-neutral-200">加载中...</div>
+      </div>
+    );
+  }
+
+  if (status !== "authenticated") {
+    return null;
+  }
 
   const fetchTags = () => {
     fetch('/api/admin/tags').then(res => res.json()).then(setTags)
   }
   useEffect(() => {
-    fetch('/api/admin/tags').then(res => res.json()).then(setTags)
-  }, [])
+    if (status === "authenticated") {
+      fetchTags()
+    }
+  }, [status])
 
   const handleAdd = async (e: any) => {
     e.preventDefault()

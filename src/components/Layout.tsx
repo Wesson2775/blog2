@@ -17,8 +17,8 @@ export default function Layout({
   children: React.ReactNode
 }) {
   const [siteConfig, setSiteConfig] = useState({
-    title: '只抄',
-    subtitle: '个人技术博客，分享技术探索和生活感悟'
+    title: '',
+    subtitle: ''
   })
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export default function Layout({
         const data = await response.json()
         setSiteConfig(data)
         // 更新网页标题
-        document.title = data.title
+        document.title = data.title || ''
       } catch (error) {
         console.error('获取站点配置失败:', error)
       }
@@ -65,7 +65,7 @@ export default function Layout({
       <footer className="border-t border-border bg-[#181f2a]">
         <div className="max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="text-center text-gray-400 text-xs">
-            <p>© 2024 {siteConfig.title}. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} {siteConfig.title || ''}. All rights reserved.</p>
             <div className="mt-2 space-x-4">
               <a href="/analytics" className="hover:text-neutral-200">Analytics</a>
               <a href="/rss.xml" className="hover:text-neutral-200">RSS</a>

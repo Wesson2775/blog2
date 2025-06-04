@@ -1,15 +1,6 @@
-'use client'
-
 import { prisma } from '@/lib/prisma'
-import { useState } from 'react'
 
 export default async function AboutPage() {
-  const [siteConfig, setSiteConfig] = useState({
-    title: '',
-    subtitle: '',
-    description: ''
-  })
-
   const config = await prisma.siteConfig.findFirst() || {
     title: '',
     subtitle: '',

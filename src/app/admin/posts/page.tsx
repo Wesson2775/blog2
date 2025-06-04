@@ -1,10 +1,32 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function AdminPosts() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [posts, setPosts] = useState<any[]>([])
   const [search, setSearch] = useState('')
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.replace("/admin/login");
+    }
+  }, [status, router]);
+
+  if (status === "loading") {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[#181f2a]">
+        <div className="text-neutral-200">加载中...</div>
+      </div>
+    );
+  }
+
+  if (status !== "authenticated") {
+    return null;
+  }
 
   const fetchPosts = () => {
     fetch(`/api/admin/posts?search=${encodeURIComponent(search)}`)
@@ -36,8 +58,10 @@ export default function AdminPosts() {
   }
 
   useEffect(() => {
-    fetchPosts()
-  }, [search])
+    if (status === "authenticated") {
+      fetchPosts()
+    }
+  }, [search, status])
 
   return (
     <div className="w-full max-w-4xl mx-auto">

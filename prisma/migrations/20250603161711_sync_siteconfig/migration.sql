@@ -10,6 +10,6 @@
 -- AlterTable
 ALTER TABLE "SiteConfig" DROP COLUMN "notice",
 ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-ADD COLUMN     "email" TEXT NOT NULL DEFAULT '862832617@qq.com',
-ADD COLUMN     "github" TEXT NOT NULL DEFAULT 'http://github.com/wesson2775',
-ADD COLUMN     "subtitle" TEXT NOT NULL DEFAULT '个人技术博客，分享技术探索和生活感悟';
+ADD COLUMN     "email" TEXT NOT NULL,
+ADD COLUMN     "github" TEXT NOT NULL,
+ADD COLUMN     "subtitle" TEXT NOT NULL;

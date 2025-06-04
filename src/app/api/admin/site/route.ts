@@ -5,13 +5,7 @@ import { NextResponse } from 'next/server'
 export async function GET() {
   try {
     const config = await prisma.siteConfig.findFirst()
-    return NextResponse.json(config || {
-      title: '只抄',
-      subtitle: '个人技术博客，分享技术探索和生活感悟',
-      github: 'http://github.com/wesson2775',
-      email: '862832617@qq.com',
-      description: 'Hi，我是 Kevin。\n欢迎来到 只抄 博客！\n这里记录我的技术、生活与思考。'
-    })
+    return NextResponse.json(config || {})
   } catch (error) {
     console.error('Failed to fetch site config:', error)
     return NextResponse.json({ error: 'Failed to fetch site config' }, { status: 500 })

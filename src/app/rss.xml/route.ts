@@ -21,8 +21,8 @@ export async function GET() {
     const rss = `<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>${siteConfig?.title || '只抄'}</title>
-    <description>${siteConfig?.subtitle || '个人技术博客，分享技术探索和生活感悟'}</description>
+    <title>${siteConfig?.title || ''}</title>
+    <description>${siteConfig?.subtitle || ''}</description>
     <link>${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}</link>
     <atom:link href="${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/rss.xml" rel="self" type="application/rss+xml" />
     <language>zh-CN</language>
