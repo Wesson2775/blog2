@@ -56,7 +56,7 @@ export default async function Home({ searchParams }: { searchParams: { page?: st
                 <span>[置顶]</span>
               )}
             </div>
-            <Link href={`/blog/${post.slug}`}>
+            <Link href={`/blog/${encodeURIComponent(post.slug)}`}>
               <h2 className="text-base mb-1 hover:text-red-400 transition-colors">{post.title}</h2>
             </Link>
             <p className="text-neutral-400 text-sm line-clamp-2">{post.content}</p>

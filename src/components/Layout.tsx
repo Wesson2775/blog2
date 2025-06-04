@@ -3,7 +3,7 @@
 import { Inter } from 'next/font/google'
 import Navbar from './Navbar'
 import Sidebar from './Sidebar'
-import MusicPlayer from './MusicPlayer'
+import { useEffect, useState } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,6 +16,43 @@ export default function Layout({
 }: {
   children: React.ReactNode
 }) {
+  const [siteConfig, setSiteConfig] = useState({
+    title: '只抄',
+    subtitle: '个人技术博客，分享技术探索和生活感悟'
+  })
+
+  useEffect(() => {
+    const fetchSiteConfig = async () => {
+      try {
+        const response = await fetch('/api/admin/site')
+        const data = await response.json()
+        setSiteConfig(data)
+        // 更新网页标题
+        document.title = data.title
+      } catch (error) {
+        console.error('获取站点配置失败:', error)
+      }
+    }
+
+    fetchSiteConfig()
+  }, [])
+
+  // 添加点击音效
+  useEffect(() => {
+    const clickSound = new Audio('/sounds/click_effect.mp3')
+    
+    const handleClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      if (target.tagName === 'A' || target.tagName === 'BUTTON') {
+        clickSound.currentTime = 0
+        clickSound.play().catch(() => {})
+      }
+    }
+
+    document.addEventListener('click', handleClick)
+    return () => document.removeEventListener('click', handleClick)
+  }, [])
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -28,17 +65,16 @@ export default function Layout({
         </div>
       </div>
       <footer className="border-t border-border bg-[#181f2a]">
-        <div className="w-[832px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="text-center text-gray-400 text-xs">
-            <p>© 2024 只抄. All rights reserved.</p>
+            <p>© 2024 {siteConfig.title}. All rights reserved.</p>
             <div className="mt-2 space-x-4">
               <a href="/analytics" className="hover:text-neutral-200">Analytics</a>
-              <a href="/rss" className="hover:text-neutral-200">RSS</a>
+              <a href="/rss.xml" className="hover:text-neutral-200">RSS</a>
             </div>
           </div>
         </div>
       </footer>
-      <MusicPlayer />
     </div>
   )
 } 

@@ -6,6 +6,8 @@ import { Search, Github, Mail, Menu, MoreHorizontal } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
 import SearchModal from './SearchModal'
 import Image from 'next/image'
+import clsx from 'clsx'
+import '@/styles/navbar.css'
 
 const menu = [
   { name: '首页', path: '/' },
@@ -21,13 +23,15 @@ export default function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [isAnimating, setIsAnimating] = useState(false)
   const menuBtnRef = useRef<HTMLButtonElement>(null)
   const [siteConfig, setSiteConfig] = useState({
-    title: '只抄',
-    subtitle: '个人技术博客，分享技术探索和生活感悟',
-    github: 'http://github.com/wesson2775',
-    email: '862832617@qq.com'
+    title: '',
+    subtitle: '',
+    github: '',
+    email: ''
   })
+  const [hamburgerHover, setHamburgerHover] = useState(false)
 
   useEffect(() => {
     const fetchSiteConfig = async () => {
@@ -69,9 +73,34 @@ export default function Navbar() {
     }
   }
 
+  const handleMobileMenuClick = () => {
+    if(isAnimating) return;
+    
+    if(mobileMenuOpen) {
+      // 逆向动画
+      setIsAnimating(true);
+      const btn = menuBtnRef.current;
+      if (btn) {
+        btn.classList.remove('active');
+      }
+      
+      setTimeout(() => {
+        setMobileMenuOpen(false);
+        setIsAnimating(false);
+      }, 300);
+    } else {
+      // 正向动画
+      setMobileMenuOpen(true);
+      const btn = menuBtnRef.current;
+      if (btn) {
+        btn.classList.add('active');
+      }
+    }
+  }
+
   return (
     <>
-      <nav className="sticky top-0 z-50 w-full border-b border-border bg-[#181f2a] backdrop-blur">
+      <nav className="sticky top-0 z-[9999] w-full border-b border-border">
         <div className="max-w-full md:max-w-[832px] mx-auto px-2 sm:px-4 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             {/* 左侧 Logo+博客名+搜索框（1280px以上和768-1280px都显示） */}
@@ -83,7 +112,7 @@ export default function Navbar() {
                 height={32}
                 className="rounded-full"
               />
-              <Link href="/" className="text-xl font-bold text-neutral-200 ml-1">{siteConfig.title}</Link>
+              <Link href="/" className="text-xl font-bold text-neutral-200 ml-3">{siteConfig.title}</Link>
               {/* 搜索框，严格还原截图样式 */}
               <form
                 action="/search"
@@ -183,56 +212,67 @@ export default function Navbar() {
                 <button className="p-2 flex items-center justify-center" style={{minWidth:36}} title="搜索" onClick={() => setSearchOpen(true)}>
                   <Search className="w-5 h-5 text-neutral-200" />
                 </button>
-                <button className="p-2 flex items-center justify-center" style={{minWidth:36}} title="菜单" onClick={() => setMobileMenuOpen(true)}>
-                  <Menu className="w-6 h-6 text-neutral-200" />
-                </button>
-                {/* 移动端菜单弹窗：全屏遮罩，顶部为菜单和图标 */}
-                {mobileMenuOpen && (
-                  <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur flex flex-col h-screen" onClick={() => setMobileMenuOpen(false)}>
-                    {/* 顶部菜单栏 */}
-                    <div className="w-full bg-[#232b3b] pt-6 pb-8 px-6 rounded-b-[16px] flex flex-col items-center shadow-lg relative" onClick={e => e.stopPropagation()}>
-                      <button className="absolute top-4 right-4 text-2xl text-neutral-200" onClick={() => setMobileMenuOpen(false)} aria-label="关闭">×</button>
-                      <div className="flex flex-col items-center gap-6 mt-2">
-                        {menu.map((item) => (
-                          <Link
-                            key={item.path}
-                            href={item.path}
-                            className="text-lg text-neutral-200 font-medium hover:text-red-400 transition-colors"
-                            onClick={() => setMobileMenuOpen(false)}
-                          >
-                            {item.name}
-                          </Link>
-                        ))}
-                        <div className="flex gap-6 mt-2">
-                          <a
-                            href={siteConfig.github}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-border transition-colors"
-                            aria-label="GitHub"
-                          >
-                            <Github className="w-6 h-6 text-neutral-200" />
-                          </a>
-                          <a
-                            href={`mailto:${siteConfig.email}`}
-                            className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-border transition-colors"
-                            aria-label="Email"
-                          >
-                            <Mail className="w-6 h-6 text-neutral-200" />
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                    {/* 其余区域为遮罩，点击关闭 */}
-                    <div className="flex-1" />
+                {/* 新汉堡菜单按钮 */}
+                <button 
+                  ref={menuBtnRef}
+                  className={`hamburger-btn ${mobileMenuOpen ? 'active' : ''}`}
+                  onClick={handleMobileMenuClick}
+                  aria-label="菜单"
+                >
+                  <div className="hamburger-container">
+                    <div className="hamburger-line top"></div>
+                    <div className="hamburger-line middle"></div>
+                    <div className="hamburger-line bottom"></div>
                   </div>
-                )}
+                </button>
               </div>
             </div>
           </div>
         </div>
       </nav>
       <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} onSearch={handleSearch} />
+      
+      {/* 添加移动端侧边栏 */}
+      <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
+        <div className="mobile-menu-content">
+          <div className="flex flex-col h-full w-full">
+            <div className="flex flex-col space-y-4 mt-8">
+              {menu.map((item) => (
+                <Link
+                  key={item.path}
+                  href={item.path}
+                  className={`px-4 py-2 text-lg font-medium transition-colors ${
+                    pathname === item.path
+                      ? 'text-red-400 font-semibold'
+                      : 'text-neutral-200 hover:text-neutral-200'
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              ))}
+              <div className="flex items-center space-x-4 mt-4">
+                <a
+                  href={siteConfig.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-[#232b3b] transition-colors"
+                  aria-label="GitHub"
+                >
+                  <Github className="w-5 h-5 text-gray-400" />
+                </a>
+                <a
+                  href={`mailto:${siteConfig.email}`}
+                  className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-[#232b3b] transition-colors"
+                  aria-label="Email"
+                >
+                  <Mail className="w-5 h-5 text-gray-400" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   )
 } 

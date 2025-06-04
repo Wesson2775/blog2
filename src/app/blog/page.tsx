@@ -25,7 +25,7 @@ export default async function BlogPage({ searchParams }: { searchParams: { page?
         {posts.map((post) => (
           <div key={post.id} className="">
             <div className="text-xs text-red-400 mb-1">{format(post.createdAt, 'yyyy/MM/dd', { locale: zhCN })}</div>
-            <Link href={`/blog/${post.slug}`}>
+            <Link href={`/blog/${encodeURIComponent(post.slug)}`}>
               <h2 className="text-base mb-1 hover:text-red-400 transition-colors">{post.title}</h2>
             </Link>
             <div className="text-sm text-neutral-300 line-clamp-2">

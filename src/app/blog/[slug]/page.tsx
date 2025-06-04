@@ -10,22 +10,34 @@ type PostWithTags = Post & {
 }
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
+  // 首先检查文章是否存在
   const post = await prisma.post.findUnique({
     where: {
-      slug: params.slug,
-      published: true
+      slug: decodeURIComponent(params.slug)
     },
     include: {
-      tags: {
-        where: {
-          published: true
-        }
-      }
+      tags: true
     }
-  }) as PostWithTags | null
+  })
 
+  // 如果文章不存在，返回404
   if (!post) {
+    console.error(`文章不存在: ${params.slug}`)
     notFound()
+  }
+
+  // 如果文章未发布，返回404
+  if (!post.published) {
+    console.error(`文章未发布: ${params.slug}`)
+    notFound()
+  }
+
+  // 过滤出已发布的标签
+  const publishedTags = post.tags.filter(tag => tag.published)
+  
+  // 如果文章没有任何已发布的标签，记录警告但继续显示文章
+  if (publishedTags.length === 0) {
+    console.warn(`文章没有已发布的标签: ${params.slug}`)
   }
 
   // 查询上一篇和下一篇
@@ -49,24 +61,25 @@ export default async function PostPage({ params }: { params: { slug: string } })
   return (
     <div className="mx-auto max-w-3xl px-4">
       <article className="prose dark:prose-invert max-w-none">
-        <div className="mb-2 text-sm text-neutral-400 flex gap-5">
+        <h1 className="text-center">{post.title}</h1>
+        <div className="mb-6 flex justify-center items-center text-sm text-neutral-400 gap-2">
           <time dateTime={post.createdAt.toISOString()}>
             {format(post.createdAt, 'yyyy/MM/dd', { locale: zhCN })}
           </time>
-          {post.tags.length > 0 && (
-            <div className="flex gap-1">
-              {post.tags.map((tag, index) => (
-                <Link href={`/tags/${encodeURIComponent(tag.name)}`} key={tag.id}>
-                  <span className="text-red-400 hover:text-red-400">
+          {publishedTags.length > 0 && (
+            <>
+              <span className="mx-2">/</span>
+              <span>
+                {publishedTags.map((tag, index) => (
+                  <span key={tag.id}>
                     {tag.name}
-                    {index < post.tags.length - 1 && ' '}
+                    {index < publishedTags.length - 1 && <span className="mx-1">/</span>}
                   </span>
-                </Link>
-              ))}
-            </div>
+                ))}
+              </span>
+            </>
           )}
         </div>
-        <h1>{post.title}</h1>
         <div dangerouslySetInnerHTML={{ __html: post.content }} />
       </article>
 

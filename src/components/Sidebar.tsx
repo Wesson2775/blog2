@@ -58,7 +58,7 @@ export default function Sidebar() {
             alt="Avatar"
             width={64}
             height={64}
-            className="rounded-full mx-auto"
+            className="rounded-full"
           />
         </div>
         <h1 className="text-xl font-bold text-neutral-200 mb-2">{siteConfig.title}</h1>
@@ -84,7 +84,7 @@ export default function Sidebar() {
       </div>
 
       {/* 社交链接 */}
-      <div className="flex justify-center space-x-4">
+      <div className="flex space-x-4">
         <a
           href={siteConfig.github}
           target="_blank"

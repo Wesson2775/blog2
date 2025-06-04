@@ -21,6 +21,7 @@
     "@prisma/client": "^5.22.0",
     "@vercel/postgres": "^0.7.2",
     "bytemd": "^1.21.0",
+    "clsx": "^2.1.1",
     "date-fns": "^3.3.1",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.511.0",
