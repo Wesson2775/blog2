@@ -251,7 +251,7 @@ export default function Navbar() {
                   {item.name}
                 </Link>
               ))}
-              <div className="flex items-center space-x-4 mt-4">
+              <div className="icon-container">
                 <a
                   href={siteConfig.github}
                   target="_blank"

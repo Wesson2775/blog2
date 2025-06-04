@@ -1,19 +1,22 @@
 import { NextResponse } from 'next/server'
-
-// 模拟数据
-const mockLink = {
-  id: '1',
-  name: '示例友链',
-  url: 'https://example.com',
-  description: '这是一个示例友链'
-}
+import { prisma } from '@/lib/prisma'
 
 // 获取单个友情链接
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  return NextResponse.json(mockLink)
+  const link = await prisma.link.findUnique({
+    where: {
+      id: params.id
+    }
+  });
+  
+  if (!link) {
+    return NextResponse.json({ error: 'Link not found' }, { status: 404 });
+  }
+
+  return NextResponse.json(link)
 }
 
 // PUT /api/admin/links/:id
@@ -21,7 +24,22 @@ export async function PUT(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  return NextResponse.json(mockLink)
+  const body = await request.json();
+  const { name, url, description, published } = body;
+
+  const updatedLink = await prisma.link.update({
+    where: {
+      id: params.id
+    },
+    data: {
+      name,
+      url,
+      description,
+      published
+    }
+  });
+
+  return NextResponse.json(updatedLink);
 }
 
 export async function DELETE(

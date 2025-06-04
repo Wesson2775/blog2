@@ -37,20 +37,18 @@ export default function Layout({
     fetchSiteConfig()
   }, [])
 
-  // 添加点击音效
+  // 添加页面加载音效
   useEffect(() => {
-    const clickSound = new Audio('/sounds/click_effect.mp3')
+    const loadSound = new Audio('/sounds/click_effect.mp3')
     
-    const handleClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement
-      if (target.tagName === 'A' || target.tagName === 'BUTTON') {
-        clickSound.currentTime = 0
-        clickSound.play().catch(() => {})
-      }
+    const handleLoad = () => {
+      loadSound.currentTime = 0
+      loadSound.play().catch(() => {})
     }
 
-    document.addEventListener('click', handleClick)
-    return () => document.removeEventListener('click', handleClick)
+    // 页面加载完成后播放音效
+    window.addEventListener('load', handleLoad)
+    return () => window.removeEventListener('load', handleLoad)
   }, [])
 
   return (

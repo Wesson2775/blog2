@@ -13,6 +13,7 @@
   position: relative;
   z-index: 9999 !important;
   transition: opacity 0.2s ease;
+  margin-right: 300px;
 }
 
 .hamburger-btn:hover {
@@ -104,17 +105,16 @@ nav {
 .mobile-menu-content {
   position: relative;
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   max-width: 24rem;
   background-color: transparent;
   box-shadow: 0 0 32px 0 rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
   padding-top: 3rem;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
   transform: translateX(100%);
   transition: transform 0.3s ease;
+  margin-left: auto;
 }
 
 .mobile-menu.open .mobile-menu-content {
@@ -129,9 +129,26 @@ nav {
   z-index: 9999 !important;
 }
 
+/* 添加图标容器样式 */
+.mobile-menu-content .icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* 调整主内容区域的对齐方式 */
+.mobile-menu-content > div.flex-col.h-full.w-full > div.flex-col.space-y-4.mt-8 {
+  align-items: center;
+}
+
 /* 搜索按钮悬浮效果 */
 button[title="搜索"] {
   transition: opacity 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 button[title="搜索"]:hover {
