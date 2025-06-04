@@ -1,9 +1,11 @@
 'use client'
 
 import { Inter } from 'next/font/google'
-import Navbar from './Navbar'
-import Sidebar from './Sidebar'
+import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
+
+const Navbar = dynamic(() => import('./Navbar'), { ssr: true })
+const Sidebar = dynamic(() => import('./Sidebar'), { ssr: false })
 
 const inter = Inter({ subsets: ['latin'] })
 
