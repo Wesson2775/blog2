@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { format } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
 import { Post, Tag } from '@prisma/client'
+import MarkdownViewer from '@/components/MarkdownViewer'
 
 type PostWithTags = Post & {
   tags: Tag[]
@@ -45,16 +46,16 @@ export default async function PostPage({ params }: { params: { slug: string } })
     prisma.post.findFirst({
       where: {
         published: true,
-        createdAt: { lt: post.createdAt }
+        createdAt: { gt: post.createdAt }
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'asc' }
     }),
     prisma.post.findFirst({
       where: {
         published: true,
-        createdAt: { gt: post.createdAt }
+        createdAt: { lt: post.createdAt }
       },
-      orderBy: { createdAt: 'asc' }
+      orderBy: { createdAt: 'desc' }
     })
   ])
 
@@ -80,7 +81,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
             </>
           )}
         </div>
-        <div dangerouslySetInnerHTML={{ __html: post.content }} />
+        <MarkdownViewer content={post.content} />
       </article>
 
       <div className="flex justify-between items-center mt-12 pt-4 border-t border-neutral-800">

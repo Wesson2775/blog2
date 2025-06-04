@@ -39,20 +39,6 @@ export default function Layout({
     fetchSiteConfig()
   }, [])
 
-  // 添加页面加载音效
-  useEffect(() => {
-    const loadSound = new Audio('/sounds/click_effect.mp3')
-    
-    const handleLoad = () => {
-      loadSound.currentTime = 0
-      loadSound.play().catch(() => {})
-    }
-
-    // 页面加载完成后播放音效
-    window.addEventListener('load', handleLoad)
-    return () => window.removeEventListener('load', handleLoad)
-  }, [])
-
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />

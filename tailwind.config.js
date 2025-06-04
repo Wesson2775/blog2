@@ -30,23 +30,72 @@ module.exports = {
       typography: {
         DEFAULT: {
           css: {
-            maxWidth: '65ch',
-            color: 'var(--foreground)',
+            maxWidth: 'none',
+            color: '#ededed',
             a: {
-              color: 'var(--primary)',
+              color: '#ef4444',
               '&:hover': {
-                color: 'var(--primary-hover)',
+                color: '#dc2626',
               },
             },
-            'h1, h2, h3, h4': {
-              color: 'var(--foreground)',
+            h1: {
+              color: '#ededed',
+            },
+            h2: {
+              color: '#ededed',
+            },
+            h3: {
+              color: '#ededed',
+            },
+            h4: {
+              color: '#ededed',
+            },
+            h5: {
+              color: '#ededed',
+            },
+            h6: {
+              color: '#ededed',
+            },
+            strong: {
+              color: '#ededed',
             },
             code: {
-              color: 'var(--foreground)',
+              color: '#ef4444',
+              backgroundColor: '#232b3b',
+              padding: '0.2em 0.4em',
+              borderRadius: '0.25rem',
             },
-            'pre code': {
-              backgroundColor: 'var(--muted)',
-              color: 'var(--foreground)',
+            pre: {
+              backgroundColor: '#232b3b',
+              color: '#ededed',
+            },
+            blockquote: {
+              color: '#94a3b8',
+              borderLeftColor: '#2d3748',
+            },
+            hr: {
+              borderColor: '#2d3748',
+            },
+            ol: {
+              color: '#ededed',
+            },
+            ul: {
+              color: '#ededed',
+            },
+            li: {
+              color: '#ededed',
+            },
+            table: {
+              color: '#ededed',
+            },
+            thead: {
+              color: '#ededed',
+              borderBottomColor: '#2d3748',
+            },
+            tbody: {
+              tr: {
+                borderBottomColor: '#2d3748',
+              },
             },
           },
         },
