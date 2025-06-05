@@ -12,8 +12,8 @@ import '@/styles/navbar.css'
 const menu = [
   { name: '首页', path: '/' },
   { name: '笔记', path: '/notes' },
-  { name: '标签', path: '/tags' },
   { name: '友链', path: '/links' },
+  { name: '标签', path: '/tags' },
   { name: '关于', path: '/about' },
 ]
 
@@ -34,10 +34,17 @@ export default function Navbar() {
   const [hamburgerHover, setHamburgerHover] = useState(false)
 
   useEffect(() => {
-    fetch('/api/admin/site')
-      .then(res => res.json())
-      .then(setSiteConfig)
-      .catch(() => setSiteConfig({ title: '', subtitle: '', github: '', email: '' }))
+    const fetchSiteConfig = async () => {
+      try {
+        const response = await fetch('/api/admin/site')
+        const data = await response.json()
+        setSiteConfig(data)
+      } catch (error) {
+        console.error('获取站点配置失败:', error)
+      }
+    }
+
+    fetchSiteConfig()
   }, [])
 
   // 全局快捷键监听
@@ -147,7 +154,7 @@ export default function Navbar() {
               {/* 1280px以上显示 GitHub/邮箱图标 */}
               <div className="hidden xl:flex items-center space-x-2 ml-4">
                 <a
-                  href={siteConfig.github}
+                  href={siteConfig.github?.startsWith('http') ? siteConfig.github : `https://${siteConfig.github}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center w-8 h-8 rounded-full bg-muted hover:bg-border transition-colors"
@@ -182,7 +189,7 @@ export default function Navbar() {
                     style={{ minWidth: 80 }}
                   >
                     <a
-                      href={siteConfig.github}
+                      href={siteConfig.github?.startsWith('http') ? siteConfig.github : `https://${siteConfig.github}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-border transition-colors"
@@ -246,7 +253,7 @@ export default function Navbar() {
               ))}
               <div className="icon-container">
                 <a
-                  href={siteConfig.github}
+                  href={siteConfig.github?.startsWith('http') ? siteConfig.github : `https://${siteConfig.github}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-[#232b3b] transition-colors"

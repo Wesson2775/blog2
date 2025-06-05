@@ -15,14 +15,11 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const pathname = usePathname();
   const isAdmin = pathname.startsWith("/admin");
   const [songs, setSongs] = useState<Song[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchSongs = async () => {
       try {
-        setIsLoading(true);
         const response = await fetch('/api/admin/music?published=true');
-        if (!response.ok) throw new Error('Failed to fetch songs');
         const data = await response.json();
         const formattedSongs = data.map((song: any) => ({
           title: song.title,
@@ -33,25 +30,16 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         setSongs(formattedSongs);
       } catch (error) {
         console.error('获取音乐列表失败:', error);
-        setSongs([]);
-      } finally {
-        setIsLoading(false);
       }
     };
 
-    if (!isAdmin) {
-      fetchSongs();
-    }
-  }, [isAdmin]);
+    fetchSongs();
+  }, []);
 
-  if (isAdmin) {
-    return <>{children}</>;
-  }
-
-  return (
+  return isAdmin ? <>{children}</> : (
     <>
       <Layout>{children}</Layout>
-      {!isLoading && songs.length > 0 && (
+      {songs.length > 0 && (
         <MiniRecordPlayer
           config={{
             position: 'bottom-left',

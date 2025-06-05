@@ -24,17 +24,28 @@ export default function Sidebar() {
   })
 
   useEffect(() => {
-    fetch('/api/tags')
-      .then(res => res.json())
-      .then(setTags)
-      .catch(() => setTags([]))
-  }, [])
+    const fetchTags = async () => {
+      try {
+        const response = await fetch('/api/tags')
+        const data = await response.json()
+        setTags(data)
+      } catch (error) {
+        console.error('获取标签失败:', error)
+      }
+    }
 
-  useEffect(() => {
-    fetch('/api/admin/site')
-      .then(res => res.json())
-      .then(setSiteConfig)
-      .catch(() => setSiteConfig({ title: '', subtitle: '', github: '', email: '' }))
+    const fetchSiteConfig = async () => {
+      try {
+        const response = await fetch('/api/admin/site')
+        const data = await response.json()
+        setSiteConfig(data)
+      } catch (error) {
+        console.error('获取站点配置失败:', error)
+      }
+    }
+
+    fetchTags()
+    fetchSiteConfig()
   }, [])
 
   return (
@@ -76,7 +87,7 @@ export default function Sidebar() {
       <div className="flex space-x-4">
         {siteConfig.github && (
           <a
-            href={siteConfig.github}
+            href={siteConfig.github.startsWith('http') ? siteConfig.github : `https://${siteConfig.github}`}
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-400 hover:text-red-400"

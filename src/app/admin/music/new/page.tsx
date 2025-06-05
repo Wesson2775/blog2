@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 
 export default function NewMusic() {
   const [title, setTitle] = useState('')
@@ -77,8 +76,8 @@ export default function NewMusic() {
         </div>
         {error && <div className="text-red-400">{error}</div>}
         <div className="flex gap-4">
-          <button type="submit" className="bg-red-400 hover:bg-red-400 text-neutral-200 rounded px-4 py-2 font-bold text-center">保存</button>
-          <Link href="/admin/music" className="bg-gray-500 hover:bg-gray-600 text-neutral-200 rounded px-4 py-2 font-bold text-center">取消</Link>
+          <button type="submit" className="bg-red-400 hover:bg-red-400 text-neutral-200 rounded px-4 py-2 font-bold">创建</button>
+          <button type="button" onClick={() => router.push('/admin/music')} className="bg-gray-400 hover:bg-gray-500 text-neutral-200 rounded px-4 py-2 font-bold">取消</button>
         </div>
       </form>
     </div>

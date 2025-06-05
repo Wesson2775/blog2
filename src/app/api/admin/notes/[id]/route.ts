@@ -9,11 +9,12 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 
 // 更新笔记
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
-  const { content, published, createdAt } = await req.json()
+  const { content, pinned, published, createdAt } = await req.json()
   const note = await prisma.note.update({
     where: { id: params.id },
     data: { 
       content,
+      pinned,
       published,
       createdAt: createdAt ? new Date(createdAt) : undefined
     }

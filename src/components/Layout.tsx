@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
 
 const Navbar = dynamic(() => import('./Navbar'), { ssr: true })
-const Sidebar = dynamic(() => import('./Sidebar'), { ssr: true })
+const Sidebar = dynamic(() => import('./Sidebar'), { ssr: false })
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,18 +24,19 @@ export default function Layout({
   })
 
   useEffect(() => {
-    const fetchConfig = async () => {
+    const fetchSiteConfig = async () => {
       try {
-        const res = await fetch('/api/admin/site')
-        if (!res.ok) throw new Error('Failed to fetch site config')
-        const data = await res.json()
+        const response = await fetch('/api/admin/site')
+        const data = await response.json()
         setSiteConfig(data)
+        // 更新网页标题
+        document.title = data.title || ''
       } catch (error) {
-        console.error('Failed to fetch site config:', error)
-        setSiteConfig({ title: '', subtitle: '' })
+        console.error('获取站点配置失败:', error)
       }
     }
-    fetchConfig()
+
+    fetchSiteConfig()
   }, [])
 
   return (

@@ -13,6 +13,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const dropdownRef = useRef<HTMLDivElement>(null)
   const { data: session } = useSession()
 
+  // 如果是登录页面，直接返回子组件
+  if (pathname === '/admin/login') {
+    return children
+  }
+
   const handleSignOut = async () => {
     await signOut({ callbackUrl: '/admin/login' })
   }
@@ -181,45 +186,77 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
           <div className="flex-1 flex flex-col p-4 overflow-y-auto">
             <nav className="flex flex-col gap-4">
-              <Link href="/admin/dashboard" className="hover:text-red-400">仪表盘</Link>
-              <Link href="/admin/posts" className="hover:text-red-400">文章管理</Link>
-              <Link href="/admin/notes" className="hover:text-red-400">笔记管理</Link>
-              <Link href="/admin/tags" className="hover:text-red-400">标签管理</Link>
-              <Link href="/admin/links" className="hover:text-red-400">友链管理</Link>
-              <Link href="/admin/music" className="hover:text-red-400">音乐管理</Link>
-              <Link href="/admin/site" className="hover:text-red-400">站点配置</Link>
+              <Link 
+                href="/admin/dashboard" 
+                className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
+                  pathname === '/admin/dashboard'
+                    ? 'bg-red-400 text-white'
+                    : 'hover:text-red-400'
+                }`}
+              >
+                仪表盘
+              </Link>
+              <Link 
+                href="/admin/posts" 
+                className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
+                  pathname === '/admin/posts'
+                    ? 'bg-red-400 text-white'
+                    : 'hover:text-red-400'
+                }`}
+              >
+                文章管理
+              </Link>
+              <Link 
+                href="/admin/notes" 
+                className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
+                  pathname === '/admin/notes'
+                    ? 'bg-red-400 text-white'
+                    : 'hover:text-red-400'
+                }`}
+              >
+                笔记管理
+              </Link>
+              <Link 
+                href="/admin/tags" 
+                className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
+                  pathname === '/admin/tags'
+                    ? 'bg-red-400 text-white'
+                    : 'hover:text-red-400'
+                }`}
+              >
+                标签管理
+              </Link>
+              <Link 
+                href="/admin/links" 
+                className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
+                  pathname === '/admin/links'
+                    ? 'bg-red-400 text-white'
+                    : 'hover:text-red-400'
+                }`}
+              >
+                友链管理
+              </Link>
+              <Link 
+                href="/admin/music" 
+                className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
+                  pathname === '/admin/music'
+                    ? 'bg-red-400 text-white'
+                    : 'hover:text-red-400'
+                }`}
+              >
+                音乐管理
+              </Link>
+              <Link 
+                href="/admin/site" 
+                className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
+                  pathname === '/admin/site'
+                    ? 'bg-red-400 text-white'
+                    : 'hover:text-red-400'
+                }`}
+              >
+                站点配置
+              </Link>
             </nav>
-
-            {/* 移动端用户信息和退出登录按钮 */}
-            {session?.user && (
-              <div className="mt-auto p-4 border-t border-border">
-                <div className="flex items-center gap-3 mb-3">
-                  {session.user.image ? (
-                    <Image
-                      src={session.user.image}
-                      alt={session.user.name || '用户头像'}
-                      width={32}
-                      height={32}
-                      className="rounded-full"
-                    />
-                  ) : (
-                    <div className="w-8 h-8 rounded-full bg-red-400 flex items-center justify-center text-white">
-                      {session.user.name?.[0]?.toUpperCase()}
-                    </div>
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{session.user.name}</p>
-                    <p className="text-xs text-gray-400 truncate">{session.user.email}</p>
-                  </div>
-                </div>
-                <button
-                  onClick={handleSignOut}
-                  className="w-full py-1.5 px-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded text-sm transition-colors"
-                >
-                  退出登录
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </aside>

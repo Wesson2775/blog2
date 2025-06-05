@@ -66,6 +66,7 @@ model Post {
   excerpt   String?
   coverImage String?
   published Boolean  @default(false)
+  pinned    Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   tags      Tag[]
@@ -76,6 +77,7 @@ model Note {
   content   String
   slug      String   @unique
   published Boolean  @default(false)
+  pinned    Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

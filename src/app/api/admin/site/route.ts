@@ -14,41 +14,13 @@ export async function GET() {
 
 // 更新站点配置
 export async function PUT(req: Request) {
-  try {
-    const { title, subtitle, github, email, description } = await req.json()
-    const existingConfig = await prisma.siteConfig.findFirst()
-    
-    if (existingConfig) {
-      const config = await prisma.siteConfig.update({
-        where: { id: existingConfig.id },
-        data: {
-          title,
-          subtitle,
-          github,
-          email,
-          description,
-          updatedAt: new Date()
-        }
-      })
-      return NextResponse.json(config)
-    } else {
-      const config = await prisma.siteConfig.create({
-        data: {
-          title,
-          subtitle,
-          github,
-          email,
-          description,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        }
-      })
-      return NextResponse.json(config)
-    }
-  } catch (error) {
-    console.error('Failed to update site config:', error)
-    return NextResponse.json({ error: '更新站点配置失败' }, { status: 500 })
-  }
+  const { title, subtitle, avatar, bio } = await req.json()
+  const site = await prisma.site.upsert({
+    where: { id: '1' },
+    update: { title, subtitle, avatar, bio },
+    create: { id: '1', title, subtitle, avatar, bio }
+  })
+  return NextResponse.json(site)
 }
 
 // 保存站点配置

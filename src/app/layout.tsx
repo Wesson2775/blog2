@@ -2,10 +2,9 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import ClientLayout from "@/components/ClientLayout";
-import { getServerSession } from "next-auth/next";
+import { getServerSession } from "next-auth";
 import SessionProvider from "@/components/SessionProvider";
 import { prisma } from "@/lib/prisma";
-import { authOptions } from "@/lib/auth";
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -22,20 +21,12 @@ export const viewport: Viewport = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  try {
-    const siteConfig = await prisma.siteConfig.findFirst();
-    
-    return {
-      title: siteConfig?.title || '博客',
-      description: siteConfig?.subtitle || '个人博客',
-    };
-  } catch (error) {
-    console.error('Failed to fetch site config:', error);
-    return {
-      title: '博客',
-      description: '个人博客',
-    };
-  }
+  const siteConfig = await prisma.siteConfig.findFirst();
+  
+  return {
+    title: siteConfig?.title || '',
+    description: siteConfig?.subtitle || '',
+  };
 }
 
 export default async function RootLayout({
@@ -43,7 +34,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession();
 
   return (
     <html lang="zh-CN" suppressHydrationWarning>

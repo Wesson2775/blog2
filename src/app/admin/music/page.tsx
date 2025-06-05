@@ -63,6 +63,8 @@ export default function AdminMusic() {
       setSongs(songs.map((s: any) =>
         s.id === song.id ? { ...s, published: originalPublished } : s
       ));
+      // Optionally show an error message
+      console.error('Failed to update publish status');
     }
   };
 
@@ -70,12 +72,12 @@ export default function AdminMusic() {
     <div className="w-full max-w-4xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-2">
         <h1 className="text-2xl font-bold text-neutral-200">音乐管理</h1>
-        <Link href="/admin/music/new" className="bg-red-400 hover:bg-red-400 text-neutral-200 rounded px-3 py-1.5 text-sm font-bold text-center">新建音乐</Link>
+        <Link href="/admin/music/new" className="bg-red-400 hover:bg-red-400 text-neutral-200 rounded px-4 py-2 font-bold text-center">新建音乐</Link>
       </div>
       <div className="mb-4 flex justify-end">
         <input
           type="text"
-          className="p-1.5 rounded bg-[#232b3b] text-neutral-200 border border-[#2a3441] w-full max-w-[200px] text-center text-sm"
+          className="p-2 rounded bg-[#232b3b] text-neutral-200 border border-[#2a3441] w-full max-w-xs text-center"
           placeholder="搜索音乐名称"
           value={search}
           onChange={e => setSearch(e.target.value)}
