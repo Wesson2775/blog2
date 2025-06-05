@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
 
 const Navbar = dynamic(() => import('./Navbar'), { ssr: true })
-const Sidebar = dynamic(() => import('./Sidebar'), { ssr: false })
+const Sidebar = dynamic(() => import('./Sidebar'), { ssr: true })
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,10 +24,18 @@ export default function Layout({
   })
 
   useEffect(() => {
-    fetch('/api/admin/site')
-      .then(res => res.json())
-      .then(setSiteConfig)
-      .catch(() => setSiteConfig({ title: '', subtitle: '' }))
+    const fetchConfig = async () => {
+      try {
+        const res = await fetch('/api/admin/site')
+        if (!res.ok) throw new Error('Failed to fetch site config')
+        const data = await res.json()
+        setSiteConfig(data)
+      } catch (error) {
+        console.error('Failed to fetch site config:', error)
+        setSiteConfig({ title: '', subtitle: '' })
+      }
+    }
+    fetchConfig()
   }, [])
 
   return (

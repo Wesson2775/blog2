@@ -34,7 +34,7 @@ export default function Sidebar() {
     fetch('/api/admin/site')
       .then(res => res.json())
       .then(setSiteConfig)
-      .catch(() => setSiteConfig(null))
+      .catch(() => setSiteConfig({ title: '', subtitle: '', github: '', email: '' }))
   }, [])
 
   return (

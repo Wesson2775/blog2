@@ -37,7 +37,7 @@ export default function Navbar() {
     fetch('/api/admin/site')
       .then(res => res.json())
       .then(setSiteConfig)
-      .catch(() => setSiteConfig(null))
+      .catch(() => setSiteConfig({ title: '', subtitle: '', github: '', email: '' }))
   }, [])
 
   // 全局快捷键监听
