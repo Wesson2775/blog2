@@ -32,7 +32,7 @@ export default async function Home({ searchParams }: { searchParams: { page?: st
   const totalPages = Math.ceil(total / pageSize)
 
   return (
-    <div className="mx-auto max-w-3xl px-4">
+    <div className="mx-auto max-w-3xl px-4 mt-10">
       <div className="space-y-4">
         {(posts as unknown as PostWithTags[]).map((post) => (
           <article key={post.id} className="group">

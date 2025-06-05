@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export default function NewLink() {
   const [name, setName] = useState('')
@@ -64,7 +65,10 @@ export default function NewLink() {
           </button>
         </div>
         {error && <div className="text-red-400">{error}</div>}
-        <button type="submit" className="bg-red-400 hover:bg-red-400 text-neutral-200 rounded px-4 py-2 font-bold">保存</button>
+        <div className="flex gap-4">
+          <button type="submit" className="bg-red-400 hover:bg-red-400 text-neutral-200 rounded px-4 py-2 font-bold text-center">保存</button>
+          <Link href="/admin/links" className="bg-gray-500 hover:bg-gray-600 text-neutral-200 rounded px-4 py-2 font-bold text-center">取消</Link>
+        </div>
       </form>
     </div>
   )

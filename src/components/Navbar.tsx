@@ -12,8 +12,8 @@ import '@/styles/navbar.css'
 const menu = [
   { name: '首页', path: '/' },
   { name: '笔记', path: '/notes' },
-  { name: '友链', path: '/links' },
   { name: '标签', path: '/tags' },
+  { name: '友链', path: '/links' },
   { name: '关于', path: '/about' },
 ]
 
@@ -34,17 +34,10 @@ export default function Navbar() {
   const [hamburgerHover, setHamburgerHover] = useState(false)
 
   useEffect(() => {
-    const fetchSiteConfig = async () => {
-      try {
-        const response = await fetch('/api/admin/site')
-        const data = await response.json()
-        setSiteConfig(data)
-      } catch (error) {
-        console.error('获取站点配置失败:', error)
-      }
-    }
-
-    fetchSiteConfig()
+    fetch('/api/admin/site')
+      .then(res => res.json())
+      .then(setSiteConfig)
+      .catch(() => setSiteConfig(null))
   }, [])
 
   // 全局快捷键监听

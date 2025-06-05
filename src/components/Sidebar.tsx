@@ -24,28 +24,17 @@ export default function Sidebar() {
   })
 
   useEffect(() => {
-    const fetchTags = async () => {
-      try {
-        const response = await fetch('/api/tags')
-        const data = await response.json()
-        setTags(data)
-      } catch (error) {
-        console.error('获取标签失败:', error)
-      }
-    }
+    fetch('/api/tags')
+      .then(res => res.json())
+      .then(setTags)
+      .catch(() => setTags([]))
+  }, [])
 
-    const fetchSiteConfig = async () => {
-      try {
-        const response = await fetch('/api/admin/site')
-        const data = await response.json()
-        setSiteConfig(data)
-      } catch (error) {
-        console.error('获取站点配置失败:', error)
-      }
-    }
-
-    fetchTags()
-    fetchSiteConfig()
+  useEffect(() => {
+    fetch('/api/admin/site')
+      .then(res => res.json())
+      .then(setSiteConfig)
+      .catch(() => setSiteConfig(null))
   }, [])
 
   return (

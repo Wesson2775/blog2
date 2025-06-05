@@ -1,27 +1,30 @@
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
+import { NextRequest } from "next/server";
 
 export default withAuth(
-  function middleware(req) {
-    console.log('Middleware - Path:', req.nextUrl.pathname);
-    console.log('Middleware - Auth:', (req as any).auth);
+  async function middleware(req: NextRequest) {
+    const isAdminPath = req.nextUrl.pathname.startsWith('/admin')
+    const isLoginPath = req.nextUrl.pathname === '/login'
+    const isApiPath = req.nextUrl.pathname.startsWith('/api/admin')
 
-    // 如果用户已认证且尝试访问登录页面，则重定向到仪表盘
-    if (req.nextUrl.pathname === "/admin/login" && (req as any).auth) {
-      console.log('Middleware - Redirecting to dashboard');
-      return NextResponse.redirect(new URL("/admin/dashboard", req.url));
+    if (isAdminPath || isApiPath) {
+      const session = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
+      if (!session) {
+        return NextResponse.redirect(new URL('/login', req.url))
+      }
     }
-    return NextResponse.next();
+
+    if (isLoginPath && (req as any).auth) {
+      return NextResponse.redirect(new URL('/admin/dashboard', req.url))
+    }
+
+    return NextResponse.next()
   },
   {
     callbacks: {
       authorized: ({ token, req }) => {
-        console.log('Middleware - Authorized Check:', {
-          path: req.nextUrl.pathname,
-          hasToken: !!token,
-          token: token
-        });
-
         // 如果是登录页面，允许访问
         if (req.nextUrl.pathname === "/admin/login") {
           return true;

@@ -24,19 +24,10 @@ export default function Layout({
   })
 
   useEffect(() => {
-    const fetchSiteConfig = async () => {
-      try {
-        const response = await fetch('/api/admin/site')
-        const data = await response.json()
-        setSiteConfig(data)
-        // 更新网页标题
-        document.title = data.title || ''
-      } catch (error) {
-        console.error('获取站点配置失败:', error)
-      }
-    }
-
-    fetchSiteConfig()
+    fetch('/api/admin/site')
+      .then(res => res.json())
+      .then(setSiteConfig)
+      .catch(() => setSiteConfig({ title: '', subtitle: '' }))
   }, [])
 
   return (

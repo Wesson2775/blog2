@@ -39,8 +39,6 @@ export default function AdminNotes() {
       setNotes(notes.map((n: any) =>
         n.id === note.id ? { ...n, published: originalPublished } : n
       ));
-      // Optionally show an error message
-      console.error('Failed to update publish status');
     }
   }
 
@@ -48,12 +46,12 @@ export default function AdminNotes() {
     <div className="w-full max-w-4xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-2">
         <h1 className="text-2xl font-bold text-neutral-200">笔记管理</h1>
-        <Link href="/admin/notes/new" className="bg-red-400 hover:bg-red-400 text-neutral-200 rounded px-4 py-2 font-bold text-center">新建笔记</Link>
+        <Link href="/admin/notes/new" className="bg-red-400 hover:bg-red-400 text-neutral-200 rounded px-3 py-1.5 text-sm font-bold text-center">新建笔记</Link>
       </div>
       <div className="mb-4 flex justify-end">
         <input
           type="text"
-          className="p-2 rounded bg-[#232b3b] text-neutral-200 border border-[#2a3441] w-full max-w-xs text-center"
+          className="p-1.5 rounded bg-[#232b3b] text-neutral-200 border border-[#2a3441] w-full max-w-[200px] text-center text-sm"
           placeholder="搜索笔记内容"
           value={search}
           onChange={e => setSearch(e.target.value)}

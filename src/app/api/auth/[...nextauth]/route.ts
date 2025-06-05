@@ -19,7 +19,7 @@ declare module "next-auth" {
 }
 
 // 从环境变量获取允许的 GitHub 用户列表
-const allowedUsers = process.env.GITHUB_ALLOWED_USERS?.split(',').map(user => user.trim()) || [];
+const allowedUsers = process.env.GITHUB_ALLOWED_USERS?.split(',') || [];
 console.log('允许的 GitHub 用户:', allowedUsers);
 console.log('GITHUB_ALLOWED_USERS 环境变量值:', process.env.GITHUB_ALLOWED_USERS);
 
@@ -29,11 +29,6 @@ const handler = NextAuth({
     GithubProvider({
       clientId: process.env.GITHUB_ID!,
       clientSecret: process.env.GITHUB_SECRET!,
-      authorization: {
-        params: {
-          redirect_uri: process.env.NEXTAUTH_URL + '/api/auth/callback/github'
-        }
-      }
     }),
   ],
   session: {
@@ -41,38 +36,22 @@ const handler = NextAuth({
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   callbacks: {
-    async signIn({ user, account, profile }) {
-      if (account?.provider === "github") {
-        const githubUsername = (profile as any)?.login;
-        console.log('登录尝试详情:', {
-          githubUsername,
-          allowedUsers,
-          profile,
-          user,
-          account
-        });
-        
-        // 如果白名单为空，允许所有用户登录
-        if (allowedUsers.length === 0) {
-          console.log('白名单为空，允许所有用户登录');
-          return true;
-        }
-        
-        // 检查用户是否在白名单中
-        const isAllowed = githubUsername && allowedUsers.includes(githubUsername);
-        console.log('白名单验证结果:', {
-          githubUsername,
-          isAllowed,
-          allowedUsers
-        });
-        
-        if (!isAllowed) {
-          console.log(`用户 ${githubUsername} 不在白名单中，拒绝访问`);
-        }
-        
-        return isAllowed;
+    async signIn({ user, account }) {
+      if (account?.provider !== 'github') {
+        return false
       }
-      return false;
+
+      // 获取 GitHub 用户名
+      const githubUsername = account?.providerAccountId || user.name || user.email
+      if (!githubUsername) {
+        return false
+      }
+
+      if (allowedUsers.length === 0) {
+        return true
+      }
+
+      return allowedUsers.includes(githubUsername)
     },
     async jwt({ token, user, account }) {
       if (account && user) {
@@ -92,18 +71,10 @@ const handler = NextAuth({
       return session;
     }
   },
-  debug: true,
-  logger: {
-    error(code, metadata) {
-      console.error('NextAuth 错误:', code, metadata);
-    },
-    warn(code) {
-      console.warn('NextAuth 警告:', code);
-    },
-    debug(code, metadata) {
-      console.log('NextAuth 调试:', code, metadata);
-    }
-  }
+  pages: {
+    signIn: '/login',
+  },
+  debug: false,
 });
 
 export { handler as GET, handler as POST }; 

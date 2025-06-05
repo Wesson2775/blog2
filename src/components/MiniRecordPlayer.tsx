@@ -27,8 +27,9 @@ export default function MiniRecordPlayer({ config = {}, songs = [] }: MiniRecord
   const [volume, setVolume] = useState(config.defaultVolume || 0.8);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
 
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const audioRef = useRef<HTMLAudioElement>(typeof window !== 'undefined' ? new Audio(songs[0]?.src) : null);
   const recordRef = useRef<HTMLDivElement>(null);
   const tonearmRef = useRef<HTMLDivElement>(null);
   const progressFillRef = useRef<SVGPathElement>(null);
@@ -56,97 +57,88 @@ export default function MiniRecordPlayer({ config = {}, songs = [] }: MiniRecord
 
   useEffect(() => {
     if (songs.length > 0 && audioRef.current) {
-      const loadAudio = async () => {
-        try {
-          setIsLoading(true);
-          audioRef.current!.src = songs[currentSongIndex].src;
-          await audioRef.current!.load();
-          if (config.debug) {
-            console.log('当前播放歌曲:', songs[currentSongIndex]);
-          }
-        } catch (err) {
-          console.error('加载音频失败:', err);
-          setError('加载音频失败，请检查文件路径');
-        } finally {
-          setIsLoading(false);
-        }
-      };
-      loadAudio();
+      audioRef.current.src = songs[currentSongIndex].src
+      audioRef.current.addEventListener('ended', handleEnded)
+      audioRef.current.addEventListener('error', (err) => {
+        setError('加载音频失败')
+      })
     }
-  }, [currentSongIndex, songs]);
-
-  const handlePlay = async () => {
-    if (audioRef.current && !isLoading) {
-      try {
-        if (isPlaying) {
-          await audioRef.current.pause();
-          recordRef.current?.classList.remove('playing');
-          tonearmRef.current?.classList.remove('playing');
-        } else {
-          if (!audioRef.current.src) {
-            audioRef.current.src = songs[currentSongIndex].src;
-            await audioRef.current.load();
-          }
-          await audioRef.current.play();
-          recordRef.current?.classList.add('playing');
-          tonearmRef.current?.classList.add('playing');
-        }
-        setIsPlaying(!isPlaying);
-        setError(null);
-      } catch (err) {
-        console.error('播放失败:', err);
-        setError('播放失败，请检查音频文件');
-        setIsPlaying(false);
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.removeEventListener('ended', handleEnded)
+        audioRef.current.pause()
       }
     }
-  };
+  }, [songs, currentSongIndex])
 
-  const handlePrevious = async () => {
-    if (isLoading) return;
-    const newIndex = (currentSongIndex - 1 + songs.length) % songs.length;
-    setCurrentSongIndex(newIndex);
-    if (audioRef.current) {
-      try {
-        setIsLoading(true);
-        audioRef.current.src = songs[newIndex].src;
-        await audioRef.current.load();
-        await audioRef.current.play();
-        setIsPlaying(true);
-        setError(null);
-      } catch (err) {
-        console.error('播放失败:', err);
-        setError('播放失败，请检查音频文件');
-      } finally {
-        setIsLoading(false);
-      }
-    }
-  };
+  const handlePlay = () => {
+    if (!audioRef.current) return
+    audioRef.current.play().catch(() => {
+      setError('播放失败')
+    })
+    setIsPlaying(true)
+  }
 
-  const handleNext = async () => {
-    if (isLoading) return;
-    const newIndex = (currentSongIndex + 1) % songs.length;
-    setCurrentSongIndex(newIndex);
-    if (audioRef.current) {
-      try {
-        setIsLoading(true);
-        audioRef.current.src = songs[newIndex].src;
-        await audioRef.current.load();
-        await audioRef.current.play();
-        setIsPlaying(true);
-        setError(null);
-      } catch (err) {
-        console.error('播放失败:', err);
-        setError('播放失败，请检查音频文件');
-      } finally {
-        setIsLoading(false);
-      }
+  const handlePause = () => {
+    if (!audioRef.current) return
+    audioRef.current.pause()
+    setIsPlaying(false)
+  }
+
+  const handleEnded = () => {
+    setIsPlaying(false)
+    if (currentSongIndex < songs.length - 1) {
+      setCurrentSongIndex(currentSongIndex + 1)
+    } else {
+      setCurrentSongIndex(0)
     }
-  };
+  }
+
+  const handleNext = () => {
+    if (!audioRef.current) return
+    audioRef.current.pause()
+    if (currentSongIndex < songs.length - 1) {
+      setCurrentSongIndex(currentSongIndex + 1)
+    } else {
+      setCurrentSongIndex(0)
+    }
+  }
+
+  const handlePrev = () => {
+    if (!audioRef.current) return
+    audioRef.current.pause()
+    if (currentSongIndex > 0) {
+      setCurrentSongIndex(currentSongIndex - 1)
+    } else {
+      setCurrentSongIndex(songs.length - 1)
+    }
+  }
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newVolume = parseFloat(e.target.value) / 100;
-    setVolume(newVolume);
-  };
+    const volume = parseFloat(e.target.value)
+    if (audioRef.current) {
+      audioRef.current.volume = volume
+    }
+    setVolume(volume)
+  }
+
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime)
+    }
+  }
+
+  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const time = parseFloat(e.target.value)
+    if (audioRef.current) {
+      audioRef.current.currentTime = time
+      setCurrentTime(time)
+    }
+  }
+
+  const handleError = () => {
+    setError('音频加载错误')
+  }
 
   const togglePlaylist = () => {
     setIsPlaylistOpen(!isPlaylistOpen);
@@ -199,7 +191,7 @@ export default function MiniRecordPlayer({ config = {}, songs = [] }: MiniRecord
           <div className="controls">
             <button 
               className="control-btn" 
-              onClick={handlePrevious} 
+              onClick={handlePrev} 
               title="上一曲"
               disabled={isLoading}
             >
@@ -282,20 +274,9 @@ export default function MiniRecordPlayer({ config = {}, songs = [] }: MiniRecord
       <audio
         ref={audioRef}
         src={songs[currentSongIndex]?.src}
-        onEnded={handleNext}
-        onError={(e) => {
-          console.error('音频加载错误:', e);
-          setError('音频加载失败，请检查文件路径');
-          setIsLoading(false);
-        }}
-        onTimeUpdate={() => {
-          if (audioRef.current && progressFillRef.current) {
-            const progress = audioRef.current.currentTime / audioRef.current.duration;
-            const arcLength = Math.PI * 22;
-            const offset = arcLength * (1 - progress);
-            progressFillRef.current.style.strokeDashoffset = offset.toString();
-          }
-        }}
+        onEnded={handleEnded}
+        onError={handleError}
+        onTimeUpdate={handleTimeUpdate}
       />
     </div>
   );

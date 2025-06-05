@@ -52,8 +52,6 @@ export default function AdminPosts() {
       setPosts(posts.map((p: any) =>
         p.id === post.id ? { ...p, published: originalPublished } : p
       ));
-      // Optionally show an error message
-      console.error('Failed to update publish status');
     }
   }
 
@@ -72,7 +70,7 @@ export default function AdminPosts() {
       <div className="mb-4 flex justify-end">
         <input
           type="text"
-          className="p-2 rounded bg-[#232b3b] text-neutral-200 border border-[#2a3441] w-full max-w-xs text-center"
+          className="p-1.5 rounded bg-[#232b3b] text-neutral-200 border border-[#2a3441] w-full max-w-[200px] text-center text-sm"
           placeholder="搜索文章标题"
           value={search}
           onChange={e => setSearch(e.target.value)}
