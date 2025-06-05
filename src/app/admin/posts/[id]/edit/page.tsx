@@ -59,7 +59,6 @@ export default function EditPost({ params }: { params: { id: string } }) {
         title,
         content,
         tags: selectedTags,
-        pinned,
         published,
         createdAt: createdAt || new Date().toISOString()
       })
@@ -116,27 +115,25 @@ export default function EditPost({ params }: { params: { id: string } }) {
           </select>
         </div>
         <div className="flex items-center space-x-4">
-          <label className="flex items-center text-neutral-200">
-            <input
-              type="checkbox"
-              checked={pinned}
-              onChange={e => setPinned(e.target.checked)}
-              className="mr-2"
-            />
-            置顶
-          </label>
-          <label className="flex items-center text-neutral-200">
-            <input
-              type="checkbox"
-              checked={published}
-              onChange={e => setPublished(e.target.checked)}
-              className="mr-2"
-            />
-            发布
-          </label>
+          <span className="text-neutral-200">是否发布</span>
+          <button
+            type="button"
+            aria-label="Toggle published status"
+            onClick={() => setPublished(!published)}
+            className={`relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400 ${published ? 'bg-green-400' : 'bg-gray-400'}`}
+            title={published ? '已发布，点击关闭' : '未发布，点击开启'}
+          >
+            <span
+              aria-hidden="true"
+              className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200 ${published ? 'translate-x-5' : 'translate-x-0'}`}
+            ></span>
+          </button>
         </div>
         {error && <div className="text-red-400">{error}</div>}
-        <button type="submit" className="bg-red-400 hover:bg-red-400 text-neutral-200 rounded px-4 py-2 font-bold">保存</button>
+        <div className="flex space-x-4">
+          <button type="submit" className="bg-red-400 hover:bg-red-400 text-neutral-200 rounded px-4 py-2 font-bold">保存</button>
+          <button type="button" onClick={() => router.push('/admin/posts')} className="bg-gray-400 hover:bg-gray-500 text-neutral-200 rounded px-4 py-2 font-bold">取消</button>
+        </div>
       </form>
     </div>
   )

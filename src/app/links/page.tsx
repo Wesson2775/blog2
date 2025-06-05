@@ -18,7 +18,14 @@ export default async function Links() {
           {links.map(link => (
             <li key={link.id} className="flex items-center text-lg">
               <span className="text-red-400 mr-1">•</span>
-              <a href={link.url} target="_blank" rel="noopener noreferrer" className="mr-2 text-base text-red-400 hover:text-red-400">{link.name}</a>
+              <a 
+                href={link.url.startsWith('http') ? link.url : `https://${link.url}`} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="mr-2 text-base text-red-400 hover:text-red-400"
+              >
+                {link.name}
+              </a>
               <span className="text-base text-neutral-200">{link.description}</span>
             </li>
           ))}

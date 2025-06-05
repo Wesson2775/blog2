@@ -24,7 +24,7 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
     prisma.post.findMany({
       where,
       include: { tags: true },
-      orderBy: [{ pinned: 'desc' }, { createdAt: 'desc' }],
+      orderBy: [{ createdAt: 'desc' }],
       skip: (page - 1) * pageSize,
       take: pageSize,
     }),
@@ -53,7 +53,7 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
                   ))}
                 </div>
               )}
-              {post.pinned && <span>[置顶]</span>}
+              {/* {post.pinned && <span>[置顶]</span>} */}
             </div>
             <Link href={`/blog/${encodeURIComponent(post.slug)}`}>
               <h2 className="text-base mb-2 hover:text-red-400 transition-colors">{post.title}</h2>

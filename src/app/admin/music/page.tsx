@@ -101,9 +101,9 @@ export default function AdminMusic() {
             {songs.map((song: any) => (
               <tr key={song.id} className="border-b border-[#2a3441] text-center align-middle">
                 <td className="p-2 flex justify-center items-center"><img src={song.cover || '/path/to/default/cover.jpg'} alt="封面" className="w-10 h-10 object-cover rounded"/></td>
-                <td className="p-2 text-neutral-200">{song.name}</td>
-                <td className="p-2 text-neutral-200">{song.artist}</td>
-                <td className="p-2 text-neutral-200">{song.url}</td>
+                <td className="p-2 text-neutral-200 max-w-[150px]">{song.title}</td>
+                <td className="p-2 text-neutral-200 max-w-[150px]">{song.artist}</td>
+                <td className="p-2 text-neutral-200 max-w-[150px] truncate" title={song.src}>{song.src}</td>
                 <td className="p-2 flex justify-center items-center">
                   <button
                     aria-label="Toggle published status"
@@ -132,7 +132,7 @@ export default function AdminMusic() {
         {songs.map((song: any) => (
           <div key={song.id} className="bg-[#232b3b] rounded-lg shadow p-4 flex flex-col gap-2">
             <div className="flex justify-between items-center">
-              <div className="font-bold text-base text-neutral-200">{song.name}</div>
+              <div className="font-bold text-base text-neutral-200">{song.title}</div>
               <button
                 aria-label="Toggle published status"
                 title={song.published ? '已发布，点击关闭' : '未发布，点击开启'}
@@ -149,7 +149,7 @@ export default function AdminMusic() {
               <img src={song.cover || '/path/to/default/cover.jpg'} alt="封面" className="w-10 h-10 object-cover rounded"/>
               <div className="flex flex-col">
                 <div className="text-xs text-gray-400">歌手：{song.artist}</div>
-                <div className="text-xs text-gray-400">链接：{song.url}</div>
+                <div className="text-xs text-gray-400 max-w-[250px] truncate" title={song.src}>链接：{song.src}</div>
               </div>
             </div>
             <div className="text-xs text-gray-400">创建时间：{new Date(song.createdAt).toLocaleString()}</div>

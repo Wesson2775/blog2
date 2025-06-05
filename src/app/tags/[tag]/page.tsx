@@ -47,7 +47,7 @@ export default async function TagPostsPage({ params, searchParams }: { params: {
           }
         } 
       },
-      orderBy: [ { pinned: 'desc' }, { createdAt: 'desc' } ],
+      orderBy: [{ createdAt: 'desc' }],
       skip: (page - 1) * pageSize,
       take: pageSize,
     }),
@@ -88,7 +88,6 @@ export default async function TagPostsPage({ params, searchParams }: { params: {
                   ))}
                 </div>
               )}
-              {post.pinned && <span>[置顶]</span>}
             </div>
             <Link href={`/blog/${encodeURIComponent(post.slug)}`}>
               <h2 className="text-base mb-2 hover:text-red-400 transition-colors">{post.title}</h2>

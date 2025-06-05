@@ -22,7 +22,7 @@ export default async function Home({ searchParams }: { searchParams: { page?: st
           }
         } 
       },
-      orderBy: [{ pinned: 'desc' }, { createdAt: 'desc' }],
+      orderBy: [{ createdAt: 'desc' }],
       skip: (page - 1) * pageSize,
       take: pageSize,
     }),
@@ -51,9 +51,6 @@ export default async function Home({ searchParams }: { searchParams: { page?: st
                     </Link>
                   ))}
                 </div>
-              )}
-              {post.pinned && (
-                <span>[置顶]</span>
               )}
             </div>
             <Link href={`/blog/${encodeURIComponent(post.slug)}`}>

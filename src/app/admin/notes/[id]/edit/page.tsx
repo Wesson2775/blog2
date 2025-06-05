@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 export default function EditNote({ params }: { params: { id: string } }) {
   const [content, setContent] = useState('')
   const [published, setPublished] = useState(true)
+  const [createdAt, setCreatedAt] = useState('')
   const [error, setError] = useState('')
   const router = useRouter()
 
@@ -14,6 +15,9 @@ export default function EditNote({ params }: { params: { id: string } }) {
       .then(data => {
         setContent(data.content)
         setPublished(data.published)
+        if (data.createdAt) {
+          setCreatedAt(new Date(data.createdAt).toISOString().slice(0, 16))
+        }
       })
   }, [params.id])
 
@@ -22,7 +26,11 @@ export default function EditNote({ params }: { params: { id: string } }) {
     const res = await fetch(`/api/admin/notes/${params.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content, published })
+      body: JSON.stringify({ 
+        content,
+        published,
+        createdAt: createdAt || new Date().toISOString()
+      })
     })
     if (res.ok) {
       router.push('/admin/notes')
@@ -35,6 +43,14 @@ export default function EditNote({ params }: { params: { id: string } }) {
     <div className="max-w-xl mx-auto">
       <h1 className="text-2xl font-bold mb-6 text-neutral-200">编辑笔记</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          type="datetime-local"
+          className="w-full p-2 rounded bg-[#181f2a] text-neutral-200 border border-[#2a3441] text-neutral-400"
+          placeholder="日期（可选，默认当前时间）"
+          value={createdAt}
+          onChange={e => setCreatedAt(e.target.value)}
+          style={{ colorScheme: 'dark' }}
+        />
         <textarea
           className="w-full p-2 rounded bg-[#181f2a] text-neutral-200 border border-[#2a3441] min-h-[120px]"
           placeholder="内容 (支持 Markdown)"
@@ -58,7 +74,10 @@ export default function EditNote({ params }: { params: { id: string } }) {
           </button>
         </div>
         {error && <div className="text-red-400">{error}</div>}
-        <button type="submit" className="bg-red-400 hover:bg-red-400 text-neutral-200 rounded px-4 py-2 font-bold">保存</button>
+        <div className="flex gap-4">
+          <button type="submit" className="bg-red-400 hover:bg-red-400 text-neutral-200 rounded px-4 py-2 font-bold">保存</button>
+          <button type="button" onClick={() => router.push('/admin/notes')} className="bg-gray-400 hover:bg-gray-500 text-neutral-200 rounded px-4 py-2 font-bold">取消</button>
+        </div>
       </form>
     </div>
   )

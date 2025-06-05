@@ -20,12 +20,11 @@ export async function GET(req: Request) {
 
 // 新建文章
 export async function POST(req: Request) {
-  const { title, content, tags, pinned, published, createdAt, slug } = await req.json()
+  const { title, content, tags, published, createdAt, slug } = await req.json()
   const post = await prisma.post.create({
     data: {
       title,
       content,
-      pinned,
       published,
       createdAt: createdAt ? new Date(createdAt) : new Date(),
       slug,

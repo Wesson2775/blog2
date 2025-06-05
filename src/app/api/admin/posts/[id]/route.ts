@@ -16,8 +16,8 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   const data: any = {}
   if (typeof body.title !== 'undefined') data.title = body.title
   if (typeof body.content !== 'undefined') data.content = body.content
-  if (typeof body.pinned !== 'undefined') data.pinned = body.pinned
   if (typeof body.published !== 'undefined') data.published = body.published
+  if (typeof body.createdAt !== 'undefined') data.createdAt = new Date(body.createdAt)
   if (Array.isArray(body.tags)) {
     data.tags = { set: body.tags.map((id: string) => ({ id })) }
   }

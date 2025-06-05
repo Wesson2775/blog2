@@ -40,6 +40,14 @@ export default function AdminTags() {
     }
   }, [status])
 
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetch(`/api/admin/tags?search=${encodeURIComponent(search)}`)
+        .then(res => res.json())
+        .then(data => setTags(data))
+    }
+  }, [search, status])
+
   const handleAdd = async (e: any) => {
     e.preventDefault()
     if (!newTag.trim()) return

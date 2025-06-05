@@ -43,7 +43,6 @@ export default function NewPost() {
         title,
         content,
         tags: selectedTags,
-        pinned,
         published,
         createdAt: createdAt || new Date().toISOString(),
         slug
@@ -101,21 +100,6 @@ export default function NewPost() {
           </select>
         </div>
         <div className="flex gap-4 items-center">
-          <span className="text-neutral-200">是否置顶</span>
-          <button
-            type="button"
-            aria-label="Toggle pinned status"
-            onClick={() => setPinned(!pinned)}
-            className={`relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400 ${pinned ? 'bg-green-400' : 'bg-gray-400'}`}
-            title={pinned ? '已置顶，点击取消' : '未置顶，点击置顶'}
-          >
-            <span
-              aria-hidden="true"
-              className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200 ${pinned ? 'translate-x-5' : 'translate-x-0'}`}
-            ></span>
-          </button>
-        </div>
-        <div className="flex gap-4 items-center">
           <span className="text-neutral-200">是否发布</span>
           <button
             type="button"
@@ -131,7 +115,10 @@ export default function NewPost() {
           </button>
         </div>
         {error && <div className="text-red-400">{error}</div>}
-        <button type="submit" className="bg-red-400 hover:bg-red-400 text-neutral-200 rounded px-4 py-2 font-bold">保存</button>
+        <div className="flex space-x-4">
+          <button type="submit" className="bg-red-400 hover:bg-red-400 text-neutral-200 rounded px-4 py-2 font-bold">保存</button>
+          <button type="button" onClick={() => router.push('/admin/posts')} className="bg-gray-400 hover:bg-gray-500 text-neutral-200 rounded px-4 py-2 font-bold">取消</button>
+        </div>
       </form>
     </div>
   )

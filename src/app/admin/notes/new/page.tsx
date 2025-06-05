@@ -34,7 +34,7 @@ export default function NewNote() {
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="datetime-local"
-          className="w-full p-2 rounded bg-[#181f2a] text-neutral-200 border border-[#2a3441] text-gray-400"
+          className="w-full p-2 rounded bg-[#181f2a] text-neutral-200 border border-[#2a3441] text-neutral-400"
           placeholder="日期（可选，默认当前时间）"
           value={createdAt}
           onChange={e => setCreatedAt(e.target.value)}
@@ -62,7 +62,10 @@ export default function NewNote() {
           </button>
         </div>
         {error && <div className="text-red-400">{error}</div>}
-        <button type="submit" className="bg-red-400 hover:bg-red-400 text-neutral-200 rounded px-4 py-2 font-bold">保存</button>
+        <div className="flex gap-4">
+          <button type="submit" className="bg-red-400 hover:bg-red-400 text-neutral-200 rounded px-4 py-2 font-bold">保存</button>
+          <button type="button" onClick={() => router.push('/admin/notes')} className="bg-gray-400 hover:bg-gray-500 text-neutral-200 rounded px-4 py-2 font-bold">取消</button>
+        </div>
       </form>
     </div>
   )
