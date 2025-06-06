@@ -18,16 +18,6 @@ export default function LoginPage() {
     }
   }, [searchParams]);
 
-  useEffect(() => {
-    console.log('Login Page - Session Status:', status);
-    console.log('Login Page - Session Data:', session);
-    
-    if (status === "authenticated") {
-      console.log('Login Page - Redirecting to dashboard...');
-      router.push('/admin/dashboard');
-    }
-  }, [status, session, router]);
-
   const handleLogin = async (forcePrompt = false) => {
     try {
       setError(null);
@@ -46,14 +36,6 @@ export default function LoginPage() {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#181f2a]">
         <div className="text-neutral-200">加载中...</div>
-      </div>
-    );
-  }
-
-  if (status === "authenticated") {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-[#181f2a]">
-        <div className="text-neutral-200">正在跳转...</div>
       </div>
     );
   }
