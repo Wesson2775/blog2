@@ -19,9 +19,7 @@ declare module "next-auth" {
 }
 
 // 从环境变量获取允许的 GitHub 用户列表
-const allowedUsers = process.env.GITHUB_ALLOWED_USERS?.split(',').map(user => user.trim()) || [];
-console.log('允许的 GitHub 用户:', allowedUsers);
-console.log('GITHUB_ALLOWED_USERS 环境变量值:', process.env.GITHUB_ALLOWED_USERS);
+const allowedUsers = process.env.GITHUB_ALLOWED_USERS?.split(',') || [];
 
 const handler = NextAuth({
   adapter: PrismaAdapter(prisma),

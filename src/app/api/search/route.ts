@@ -39,7 +39,7 @@ export async function GET(request: Request) {
             }
           }
         },
-        orderBy: [{ pinned: 'desc' }, { createdAt: 'desc' }],
+        orderBy: [{ createdAt: 'desc' }],
         skip: (page - 1) * pageSize,
         take: pageSize,
       }),

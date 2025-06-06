@@ -61,9 +61,6 @@ export default function MiniRecordPlayer({ config = {}, songs = [] }: MiniRecord
           setIsLoading(true);
           audioRef.current!.src = songs[currentSongIndex].src;
           await audioRef.current!.load();
-          if (config.debug) {
-            console.log('当前播放歌曲:', songs[currentSongIndex]);
-          }
         } catch (err) {
           console.error('加载音频失败:', err);
           setError('加载音频失败，请检查文件路径');
@@ -156,6 +153,13 @@ export default function MiniRecordPlayer({ config = {}, songs = [] }: MiniRecord
     setIsCollapsed(!isCollapsed);
     if (isPlaylistOpen) {
       setIsPlaylistOpen(false);
+    }
+  };
+
+  const playSong = (index: number) => {
+    if (audioRef.current) {
+      setCurrentSongIndex(index);
+      audioRef.current.src = songs[index].src;
     }
   };
 

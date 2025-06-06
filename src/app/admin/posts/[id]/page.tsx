@@ -16,7 +16,6 @@ export default function EditPost({ params }: { params: { id: string } }) {
   const [content, setContent] = useState('')
   const [tags, setTags] = useState([])
   const [selectedTags, setSelectedTags] = useState<string[]>([])
-  const [pinned, setPinned] = useState(false)
   const [published, setPublished] = useState(true)
   const [createdAt, setCreatedAt] = useState('')
   const [error, setError] = useState('')
@@ -30,7 +29,6 @@ export default function EditPost({ params }: { params: { id: string } }) {
         setTitle(data.title)
         setContent(data.content)
         setSelectedTags(data.tags.map((t: any) => t.id))
-        setPinned(data.pinned)
         setPublished(data.published)
         setCreatedAt(new Date(data.createdAt).toISOString().slice(0, 16))
       } catch (error) {
@@ -61,7 +59,6 @@ export default function EditPost({ params }: { params: { id: string } }) {
         title,
         content,
         tags: selectedTags,
-        pinned,
         published,
         createdAt: createdAt || new Date().toISOString()
       })
@@ -118,15 +115,6 @@ export default function EditPost({ params }: { params: { id: string } }) {
           </select>
         </div>
         <div className="flex items-center space-x-4">
-          <label className="flex items-center text-neutral-200">
-            <input
-              type="checkbox"
-              checked={pinned}
-              onChange={e => setPinned(e.target.checked)}
-              className="mr-2"
-            />
-            置顶
-          </label>
           <label className="flex items-center text-neutral-200">
             <input
               type="checkbox"

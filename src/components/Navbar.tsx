@@ -101,7 +101,7 @@ export default function Navbar() {
   return (
     <>
       <nav className="sticky top-0 z-[9999] w-full border-b border-border">
-        <div className="max-w-full md:max-w-[832px] mx-auto px-2 sm:px-4 lg:px-8">
+        <div className="max-w-full md:max-w-[832px] mx-auto px-4 sm:px-4 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             {/* 左侧 Logo+博客名+搜索框（1280px以上和768-1280px都显示） */}
             <div className="flex items-center">

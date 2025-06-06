@@ -14,7 +14,6 @@ export default function EditPost({ params }: { params: { id: string } }) {
   const [content, setContent] = useState('')
   const [tags, setTags] = useState([])
   const [selectedTags, setSelectedTags] = useState<string[]>([])
-  const [pinned, setPinned] = useState(false)
   const [published, setPublished] = useState(true)
   const [createdAt, setCreatedAt] = useState('')
   const [error, setError] = useState('')
@@ -28,7 +27,6 @@ export default function EditPost({ params }: { params: { id: string } }) {
         setTitle(data.title)
         setContent(data.content)
         setSelectedTags(data.tags.map((t: any) => t.id))
-        setPinned(data.pinned)
         setPublished(data.published)
         setCreatedAt(new Date(data.createdAt).toISOString().slice(0, 16))
       } catch (error) {
@@ -114,7 +112,7 @@ export default function EditPost({ params }: { params: { id: string } }) {
             ))}
           </select>
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="flex gap-4 items-center">
           <span className="text-neutral-200">是否发布</span>
           <button
             type="button"

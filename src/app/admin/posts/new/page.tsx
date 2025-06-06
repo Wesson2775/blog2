@@ -14,7 +14,6 @@ export default function NewPost() {
   const [content, setContent] = useState('')
   const [tags, setTags] = useState([])
   const [selectedTags, setSelectedTags] = useState<string[]>([])
-  const [pinned, setPinned] = useState(false)
   const [published, setPublished] = useState(true)
   const [createdAt, setCreatedAt] = useState('')
   const [error, setError] = useState('')

@@ -11,7 +11,6 @@ export interface Post {
   excerpt?: string
   coverImage?: string
   published: boolean
-  pinned: boolean
   createdAt: string | Date
   updatedAt: string | Date
   tags: Tag[]

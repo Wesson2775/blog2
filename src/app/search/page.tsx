@@ -4,11 +4,11 @@ import { format } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
 import { Post } from '@prisma/client'
 import { Prisma } from '@prisma/client'
+import { SearchIcon } from 'lucide-react';
 // import BackButton from '@/components/BackButton'
 
 export default async function SearchPage({ searchParams }: { searchParams: { q?: string, page?: string } }) {
   const q = searchParams.q?.trim() || ''
-  console.log('搜索关键词:', q);
   const page = parseInt(searchParams.page || '1', 10)
   const pageSize = 5
   const where: Prisma.PostWhereInput = q
@@ -53,7 +53,6 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
                   ))}
                 </div>
               )}
-              {/* {post.pinned && <span>[置顶]</span>} */}
             </div>
             <Link href={`/blog/${encodeURIComponent(post.slug)}`}>
               <h2 className="text-base mb-2 hover:text-red-400 transition-colors">{post.title}</h2>
