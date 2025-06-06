@@ -21,9 +21,9 @@ export async function GET(req: Request) {
 
 // 新建标签
 export async function POST(req: Request) {
-  const { name } = await req.json()
+  const { name, published } = await req.json()
   const tag = await prisma.tag.create({
-    data: { name }
+    data: { name, published }
   })
   return NextResponse.json(tag)
 }

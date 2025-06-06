@@ -9,23 +9,38 @@ export default function NewMusic() {
   const [src, setSrc] = useState('')
   const [published, setPublished] = useState(true) // Default to published
   const [error, setError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const router = useRouter()
 
   const handleSubmit = async (e: any) => {
     e.preventDefault()
-    if (!title.trim() || !src.trim()) {
-      setError('歌曲名称和音频链接不能为空')
-      return
-    }
-    const res = await fetch('/api/admin/music', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, artist, cover, src, published })
-    })
-    if (res.ok) {
-      router.push('/admin/music')
-    } else {
-      setError('创建音乐失败')
+    setError('')
+    setIsSubmitting(true)
+
+    try {
+      if (!title.trim() || !src.trim()) {
+        setError('歌曲名称和音频链接不能为空')
+        return
+      }
+
+      const res = await fetch('/api/admin/music', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, artist, cover, src, published })
+      })
+
+      const data = await res.json()
+
+      if (res.ok) {
+        router.push('/admin/music')
+      } else {
+        setError(data.error || '创建音乐失败')
+      }
+    } catch (err) {
+      setError('创建音乐时发生错误，请重试')
+      console.error('创建音乐失败:', err)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -59,7 +74,7 @@ export default function NewMusic() {
           onChange={e => setSrc(e.target.value)}
           required
         />
-        <div className="flex gap-4 items-center">
+        <div className="flex items-center gap-2">
           <span className="text-neutral-200">是否发布</span>
           <button
             type="button"
@@ -74,10 +89,27 @@ export default function NewMusic() {
             ></span>
           </button>
         </div>
-        {error && <div className="text-red-400">{error}</div>}
+        {error && (
+          <div className="p-2 bg-red-500/10 border border-red-500/20 rounded text-red-400 text-sm">
+            {error}
+          </div>
+        )}
         <div className="flex gap-4">
-          <button type="submit" className="bg-red-400 hover:bg-red-400 text-neutral-200 rounded px-4 py-2 font-bold">创建</button>
-          <button type="button" onClick={() => router.push('/admin/music')} className="bg-gray-400 hover:bg-gray-500 text-neutral-200 rounded px-4 py-2 font-bold">取消</button>
+          <button 
+            type="submit" 
+            className="bg-red-400 hover:bg-red-400 text-neutral-200 rounded px-4 py-2 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? '创建中...' : '创建'}
+          </button>
+          <button 
+            type="button" 
+            onClick={() => router.push('/admin/music')} 
+            className="bg-gray-400 hover:bg-gray-500 text-neutral-200 rounded px-4 py-2 font-bold"
+            disabled={isSubmitting}
+          >
+            取消
+          </button>
         </div>
       </form>
     </div>

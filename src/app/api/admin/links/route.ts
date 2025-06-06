@@ -20,9 +20,9 @@ export async function GET(req: Request) {
 
 // 新建友情链接
 export async function POST(req: Request) {
-  const { name, url, description } = await req.json()
+  const { name, url, description, published } = await req.json()
   const link = await prisma.link.create({
-    data: { name, url, description }
+    data: { name, url, description, published }
   })
   return NextResponse.json(link)
 }
