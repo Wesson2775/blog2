@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { useRouter } from 'next/navigation'
 import { useSession } from "next-auth/react";
+import { format } from 'date-fns'
+import { zhCN } from 'date-fns/locale'
 
 export default function AdminTags() {
   const { data: session, status } = useSession();
@@ -134,7 +136,7 @@ export default function AdminTags() {
                     ></span>
                   </button>
                 </td>
-                <td className="p-2 text-neutral-200 whitespace-nowrap">{new Date(tag.createdAt).toLocaleString()}</td>
+                <td className="p-2 text-neutral-200 whitespace-nowrap">{format(new Date(tag.createdAt), 'yyyy/MM/dd HH:mm:ss', { locale: zhCN })}</td>
                 <td className="p-2 space-x-2">
                   <Link href={`/admin/tags/${tag.id}/edit`} className="text-blue-400 hover:underline">编辑</Link>
                   <button onClick={() => handleDelete(tag.id)} className="text-red-400 hover:underline">删除</button>
@@ -163,7 +165,7 @@ export default function AdminTags() {
               </button>
             </div>
             <div className="text-xs text-gray-400">关联文章数：{tag._count?.posts || 0}</div>
-            <div className="text-xs text-gray-400">创建时间：{new Date(tag.createdAt).toLocaleString()}</div>
+            <div className="text-xs text-gray-400">创建时间：{format(new Date(tag.createdAt), 'yyyy/MM/dd HH:mm:ss', { locale: zhCN })}</div>
             <div className="flex gap-4 mt-2">
               <Link href={`/admin/tags/${tag.id}/edit`} className="text-blue-400 hover:underline">编辑</Link>
               <button onClick={() => handleDelete(tag.id)} className="text-red-400 hover:underline">删除</button>

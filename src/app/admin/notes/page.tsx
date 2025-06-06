@@ -1,6 +1,8 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { format } from 'date-fns'
+import { zhCN } from 'date-fns/locale'
 
 export default function AdminNotes() {
   const [notes, setNotes] = useState<any[]>([])
@@ -74,7 +76,7 @@ export default function AdminNotes() {
             {notes.map((note: any) => (
               <tr key={note.id} className="border-b border-[#2a3441] text-center">
                 <td className="p-2 text-neutral-200 max-w-[160px] truncate">{note.content}</td>
-                <td className="p-2 text-neutral-200 whitespace-nowrap">{new Date(note.createdAt).toLocaleString()}</td>
+                <td className="p-2 text-neutral-200 whitespace-nowrap">{format(new Date(note.createdAt), 'yyyy/MM/dd HH:mm:ss', { locale: zhCN })}</td>
                 <td className="p-2 flex justify-center items-center">
                   <button
                     className={`relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400 ${note.published ? 'bg-green-400' : 'bg-gray-400'}`}
@@ -115,7 +117,7 @@ export default function AdminNotes() {
                 ></span>
               </button>
             </div>
-            <div className="text-xs text-gray-400">创建时间：{new Date(note.createdAt).toLocaleString()}</div>
+            <div className="text-xs text-gray-400">创建时间：{format(new Date(note.createdAt), 'yyyy/MM/dd HH:mm:ss', { locale: zhCN })}</div>
             <div className="flex gap-4 mt-2">
               <Link href={`/admin/notes/${note.id}/edit`} className="text-blue-400 hover:underline">编辑</Link>
               <button onClick={() => handleDelete(note.id)} className="text-red-400 hover:underline">删除</button>

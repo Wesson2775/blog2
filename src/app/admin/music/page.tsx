@@ -1,6 +1,8 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { format } from 'date-fns'
+import { zhCN } from 'date-fns/locale'
 
 export default function AdminMusic() {
   const [songs, setSongs] = useState<any[]>([])
@@ -117,7 +119,7 @@ export default function AdminMusic() {
                     ></span>
                   </button>
                 </td>
-                <td className="p-2 text-neutral-200 whitespace-nowrap">{new Date(song.createdAt).toLocaleString()}</td>
+                <td className="p-2 text-neutral-200 whitespace-nowrap">{format(new Date(song.createdAt), 'yyyy/MM/dd HH:mm:ss', { locale: zhCN })}</td>
                 <td className="p-2 space-x-2">
                   <Link href={`/admin/music/${song.id}/edit`} className="text-blue-400 hover:underline">编辑</Link>
                   <button onClick={() => handleDelete(song.id)} className="text-red-400 hover:underline">删除</button>
@@ -152,7 +154,7 @@ export default function AdminMusic() {
                 <div className="text-xs text-gray-400 max-w-[250px] truncate" title={song.src}>链接：{song.src}</div>
               </div>
             </div>
-            <div className="text-xs text-gray-400">创建时间：{new Date(song.createdAt).toLocaleString()}</div>
+            <div className="text-xs text-gray-400">创建时间：{format(new Date(song.createdAt), 'yyyy/MM/dd HH:mm:ss', { locale: zhCN })}</div>
             <div className="flex gap-4 mt-2">
               <Link href={`/admin/music/${song.id}/edit`} className="text-blue-400 hover:underline">编辑</Link>
               <button onClick={() => handleDelete(song.id)} className="text-red-400 hover:underline">删除</button>

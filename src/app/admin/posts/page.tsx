@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { format } from 'date-fns'
+import { zhCN } from 'date-fns/locale'
 
 export default function AdminPosts() {
   const { data: session, status } = useSession();
@@ -108,7 +110,7 @@ export default function AdminPosts() {
                     ></span>
                   </button>
                 </td>
-                <td className="p-2 text-neutral-200 whitespace-nowrap">{post.createdAt ? new Date(post.createdAt).toLocaleString() : ''}</td>
+                <td className="p-2 text-neutral-200 whitespace-nowrap">{post.createdAt ? format(new Date(post.createdAt), 'yyyy/MM/dd HH:mm:ss', { locale: zhCN }) : ''}</td>
                 <td className="p-2 flex flex-wrap gap-2 justify-center">
                   <Link href={`/admin/posts/${post.id}/edit`} className="text-blue-400 hover:underline">编辑</Link>
                   <button onClick={async () => {
@@ -150,7 +152,7 @@ export default function AdminPosts() {
                 <span key={t.id} className="bg-[#181f2a] px-2 py-0.5 rounded-full">{t.name}</span>
               ))}
             </div>
-            <div className="text-xs text-gray-400">创建时间：{post.createdAt ? new Date(post.createdAt).toLocaleString() : ''}</div>
+            <div className="text-xs text-gray-400">创建时间：{post.createdAt ? format(new Date(post.createdAt), 'yyyy/MM/dd HH:mm:ss', { locale: zhCN }) : ''}</div>
             <div className="flex gap-4 mt-2">
               <Link href={`/admin/posts/${post.id}/edit`} className="text-blue-400 hover:underline">编辑</Link>
               <button onClick={async () => {
