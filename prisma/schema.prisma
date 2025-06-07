@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -19,15 +13,14 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -59,16 +52,16 @@ model VerificationToken {
 }
 
 model Post {
-  id        String   @id @default(cuid())
-  title     String
-  slug      String   @unique
-  content   String
-  excerpt   String?
+  id         String   @id @default(cuid())
+  title      String
+  slug       String   @unique
+  content    String
+  excerpt    String?
   coverImage String?
-  published Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  tags      Tag[]
+  published  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  tags       Tag[]    @relation("PostToTag")
 }
 
 model Note {
@@ -78,35 +71,36 @@ model Note {
   published Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  pinned    Boolean  @default(false)
 }
 
 model Tag {
   id        String   @id @default(cuid())
   name      String   @unique
-  posts     Post[]
-  published Boolean  @default(false)
   createdAt DateTime @default(now())
+  published Boolean  @default(false)
+  posts     Post[]   @relation("PostToTag")
 }
 
 model Music {
-  id      String @id @default(cuid())
-  title   String
-  artist  String?
-  cover   String?
-  src     String
-  published Boolean @default(false)
+  id        String   @id @default(cuid())
+  title     String
+  artist    String?
+  cover     String?
+  src       String
   createdAt DateTime @default(now())
+  published Boolean  @default(false)
 }
 
 model SiteConfig {
   id          String   @id @default(cuid())
   title       String
-  subtitle    String
-  github      String
-  email       String
   description String
-  createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  email       String
+  github      String
+  subtitle    String
 }
 
 model Site {
@@ -122,7 +116,7 @@ model Link {
   name        String
   url         String
   description String?
-  published Boolean @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  published   Boolean  @default(false)
 }
